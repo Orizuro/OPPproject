@@ -2,11 +2,10 @@ package pt.iscte.poo.sokobanstarter;
 
 import java.util.Random;
 
-import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
-public class Empilhadora implements ImageTile{
+public class Empilhadora extends GameElement{
 
 	private Point2D position;
 	private String imageName;

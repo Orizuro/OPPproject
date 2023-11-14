@@ -1,8 +1,11 @@
 package pt.iscte.poo.sokobanstarter;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
@@ -37,11 +40,13 @@ public class GameEngine implements Observer {
 	private List<ImageTile> tileList;	// Lista de imagens
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
+	private int currentLevel = 0;
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
 		tileList = new ArrayList<>();   
 	}
+
 
 	// Implementacao do singleton para o GameEngine
 	public static GameEngine getInstance() {
@@ -51,7 +56,7 @@ public class GameEngine implements Observer {
 	}
 
 	// Inicio
-	public void start() {
+	public void start() throws FileNotFoundException {
 
 		// Setup inicial da janela que faz a interface com o utilizador
 		// algumas coisas poderiam ser feitas no main, mas estes passos tem sempre que ser feitos!
@@ -63,8 +68,9 @@ public class GameEngine implements Observer {
 
 		
 		// Criar o cenario de jogo
+		readLevelFromFile();
 		createWarehouse();      // criar o armazem
-		createMoreStuff();      // criar mais algun objetos (empilhadora, caixotes,...)
+		//createMoreStuff();      // criar mais algun objetos (empilhadora, caixotes,...)
 		sendImagesToGUI();      // enviar as imagens para a GUI
 
 		
@@ -92,22 +98,51 @@ public class GameEngine implements Observer {
 		                               // tendo em conta as novas posicoes dos objetos
 	}
 
+	private void readLevelFromFile() {
+		File levelsFile = new File("levels\\level"+currentLevel+".txt");
+		CharSequence warehouse = new StringBuffer("#= ");
+		CharSequence otherstuff = new StringBuffer("CXEBTOPM%");
+		
+		try {
+			Scanner scanner = new Scanner(levelsFile);
+			while(scanner.hasNext()) {
+				String line = scanner.nextLine();
+				System.out.println(line);
+				String[] elements = line.split("");
+				System.out.println("Elementos do elements: ");
+				for(int i = 0; i<elements.length; i++) {
+					System.out.print(elements[i]);
+					if(elements[i].contains(warehouse))
+						createWarehouse();
+					else if(elements[i].contains(otherstuff))
+						createMoreStuff(elements[i]);
+				}
+			}
+			System.out.println();
+			scanner.close();
+		} catch(FileNotFoundException e) {
+			
+		}
+	}
 
 	// Criacao da planta do armazem - so' chao neste exemplo 
 	private void createWarehouse() {
-
-		for (int y=0; y<GRID_HEIGHT; y++)
+		/*for (int y=0; y<GRID_HEIGHT; y++)
 			for (int x=0; x<GRID_HEIGHT; x++)
-				tileList.add(new Chao(new Point2D(x,y)));		
+				tileList.add(new Chao(new Point2D(x,y)));*/	
 	}
 
 	// Criacao de mais objetos - neste exemplo e' uma empilhadora e dois caixotes
-	private void createMoreStuff() {
-		bobcat = new Empilhadora( new Point2D(5,5));
+	private void createMoreStuff(String elements) {
+		switch(elements) {
+		
+		}
+		
+		/*bobcat = new Empilhadora( new Point2D(5,5));
 		tileList.add(bobcat);
 
 		tileList.add(new Caixote(new Point2D(3,3)));
-		tileList.add(new Caixote(new Point2D(3,2)));
+		tileList.add(new Caixote(new Point2D(3,2)));*/
 	}
 
 	// Envio das mensagens para a GUI - note que isto so' precisa de ser feito no inicio

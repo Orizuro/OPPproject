@@ -1,9 +1,8 @@
 package pt.iscte.poo.sokobanstarter;
 
-import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.utils.Point2D;
 
-public class Chao implements ImageTile {
+public class Chao extends GameElement {
 
 	private Point2D Point2D;
 	
