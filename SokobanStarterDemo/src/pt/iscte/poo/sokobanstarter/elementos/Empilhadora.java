@@ -33,6 +33,7 @@ public class Empilhadora extends GameElement{
 	    Point2D newPosition = position.plus(Direction.DOWN.asVector());
 	    if (isValidPosition(newPosition)) {
 	        position = newPosition;
+	        imageName="Empilhadora_D";
 	    }
 	}
 
@@ -40,6 +41,7 @@ public class Empilhadora extends GameElement{
 	    Point2D newPosition = position.plus(Direction.LEFT.asVector());
 	    if (isValidPosition(newPosition)) {
 	        position = newPosition;
+	        imageName="Empilhadora_L";
 	    }
 	}
 
@@ -47,12 +49,14 @@ public class Empilhadora extends GameElement{
 	    Point2D newPosition = position.plus(Direction.RIGHT.asVector());
 	    if (isValidPosition(newPosition)) {
 	        position = newPosition;
+	        imageName="Empilhadora_R";
 	    }
 	}
 	public void moveUP() {
 	    Point2D newPosition = position.plus(Direction.UP.asVector());
 	    if (isValidPosition(newPosition)) {
 	        position = newPosition;
+	        imageName="Empilhadora_U";
 	    }
 	}
 

@@ -69,7 +69,7 @@ public class GameEngine implements Observer {
 		
 		// Criar o cenario de jogo
 		readLevelFromFile();
-		createWarehouse();      // criar o armazem
+		//createWarehouse();      // criar o armazem
 		//createMoreStuff();      // criar mais algun objetos (empilhadora, caixotes,...)
 		sendImagesToGUI();      // enviar as imagens para a GUI
 
@@ -100,44 +100,83 @@ public class GameEngine implements Observer {
 
 	private void readLevelFromFile() {
 		File levelsFile = new File("levels\\level"+currentLevel+".txt");
-		CharSequence warehouse = new StringBuffer("#= ");
-		CharSequence otherstuff = new StringBuffer("CXEBTOPM%");
+		
+		int x=0, y=0; //Coordenadas dos objetos
 		
 		try {
 			Scanner scanner = new Scanner(levelsFile);
 			while(scanner.hasNext()) {
 				String line = scanner.nextLine();
-				System.out.println(line);
 				String[] elements = line.split("");
-				System.out.println("Elementos do elements: ");
 				for(int i = 0; i<elements.length; i++) {
-					System.out.print(elements[i]);
-					if(elements[i].contains(warehouse))
-						createWarehouse();
-					else if(elements[i].contains(otherstuff))
-						createMoreStuff(elements[i]);
+					if(elements[i].contains("#") || elements[i].contains("=") || elements[i].contains(" "))
+						createWarehouse(elements[i], x, y);
+					else if(elements[i].contains("C") ||elements[i].contains("X") ||elements[i].contains("E") ||elements[i].contains("B") ||elements[i].contains("T") ||elements[i].contains("O") ||elements[i].contains("P") ||elements[i].contains("M") ||elements[i].contains("%"))
+						createMoreStuff(elements[i], x, y);
+					x++;
 				}
+				y++;
+				x=0;
 			}
-			System.out.println();
 			scanner.close();
 		} catch(FileNotFoundException e) {
-			
+			e.printStackTrace();
 		}
 	}
 
 	// Criacao da planta do armazem - so' chao neste exemplo 
-	private void createWarehouse() {
+	private void createWarehouse(String element, int x, int y) {
+		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
+		
+		switch(element) {
+			case "#":
+				tileList.add(new Parede(new Point2D(x,y)));
+				break;
+			case "=":
+				tileList.add(new Vazio(new Point2D(x, y)));
+				break;
+			case " ":
+				tileList.add(new Chao(new Point2D(x, y)));
+				break;
+		}
+		
+		//Exemplo fornecido
 		/*for (int y=0; y<GRID_HEIGHT; y++)
 			for (int x=0; x<GRID_HEIGHT; x++)
 				tileList.add(new Chao(new Point2D(x,y)));*/	
 	}
 
 	// Criacao de mais objetos - neste exemplo e' uma empilhadora e dois caixotes
-	private void createMoreStuff(String elements) {
-		switch(elements) {
+	private void createMoreStuff(String element, int x, int y) {
+		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
 		
+		switch(element) {
+			case "E":
+				bobcat = new Empilhadora(new Point2D(x, y));
+				tileList.add(bobcat);
+				tileList.add(new Chao(new Point2D(x, y)));
+				break;
+			case "C":
+				tileList.add(new Caixote(new Point2D(x, y)));
+				break;
+			case "X":
+				tileList.add(new Alvo(new Point2D(x, y)));
+				break;
+			case "B":
+				break;
+			case "O":
+				break;
+			case "P":
+				break;
+			case "M":
+				break;
+			case "%":
+				break;
+			case "T":
+				break;
 		}
 		
+		//Exemplo fornecido
 		/*bobcat = new Empilhadora( new Point2D(5,5));
 		tileList.add(bobcat);
 
