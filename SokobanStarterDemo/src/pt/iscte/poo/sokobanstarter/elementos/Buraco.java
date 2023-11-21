@@ -3,17 +3,17 @@ package pt.iscte.poo.sokobanstarter.elementos;
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Point2D;
 
-public class Parede extends GameElement{
-
-private Point2D Point2D;
+public class Buraco extends GameElement{
 	
-	public Parede(Point2D Point2D){
+	private Point2D Point2D;
+	
+	public Buraco(Point2D Point2D){
 		this.Point2D = Point2D;
 	}
 	
 	@Override
 	public String getName() {
-		return "Parede";
+		return "Buraco";
 	}
 
 	@Override
@@ -25,5 +25,4 @@ private Point2D Point2D;
 	public int getLayer() {
 		return 0;
 	}
-
 }

@@ -1,7 +1,8 @@
-package pt.iscte.poo.sokobanstarter;
+package pt.iscte.poo.sokobanstarter.elementos;
 
 import java.util.Random;
 
+import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
