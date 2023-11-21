@@ -1,5 +1,5 @@
 package pt.iscte.poo.sokobanstarter;
-
+import pt.iscte.poo.sokobanstarter.elementos.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -74,7 +74,8 @@ public class GameEngine implements Observer {
 		sendImagesToGUI();      // enviar as imagens para a GUI
 
 		
-		// Escrever uma mensagem na StatusBar
+		// Escrever uma mensagem na StatusBarpackage pt.iscte.poo.sokobanstarter;
+
 		gui.setStatusMessage("Sokoban Starter - demo");
 	}
 
@@ -99,7 +100,7 @@ public class GameEngine implements Observer {
 	}
 
 	private void readLevelFromFile() {
-		File levelsFile = new File("levels\\level"+currentLevel+".txt");
+		File levelsFile = new File("levels/level"+currentLevel+".txt");
 		
 		int x=0, y=0; //Coordenadas dos objetos
 		
