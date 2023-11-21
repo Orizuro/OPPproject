@@ -13,20 +13,6 @@ import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
 import pt.iscte.poo.utils.Point2D;
 
-// Note que esta classe e' um exemplo - nao pretende ser o inicio do projeto, 
-// embora tambem possa ser usada para isso.
-//
-// No seu projeto e' suposto haver metodos diferentes.
-// 
-// As coisas que comuns com o projeto, e que se pretendem ilustrar aqui, sao:
-// - GameEngine implementa Observer - para  ter o metodo update(...)  
-// - Configurar a janela do interface grafico (GUI):
-//        + definir as dimensoes
-//        + registar o objeto GameEngine ativo como observador da GUI
-//        + lancar a GUI
-// - O metodo update(...) e' invocado automaticamente sempre que se carrega numa tecla
-//
-// Tudo o mais podera' ser diferente!
 
 
 public class GameEngine implements Observer {
@@ -37,14 +23,15 @@ public class GameEngine implements Observer {
 
 	private static GameEngine INSTANCE; // Referencia para o unico objeto GameEngine (singleton)
 	private ImageMatrixGUI gui;  		// Referencia para ImageMatrixGUI (janela de interface com o utilizador) 
-	private List<ImageTile> tileList;	// Lista de imagens
+	private List<ImageTile> tileList;
+	private List<GameElement> elementList;// Lista de imagens
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
 	private int currentLevel = 0;
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
-		tileList = new ArrayList<>();   
+		elementList = new ArrayList<>();   
 	}
 
 
@@ -84,7 +71,7 @@ public class GameEngine implements Observer {
 	@Override
 	public void update(Observed source) {
 
-		int key = gui.keyPressed();    // obtem o codigo da tecla pressionada
+		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
 	        bobcat.moveUP();
@@ -95,8 +82,8 @@ public class GameEngine implements Observer {
 	    if (key == KeyEvent.VK_RIGHT)
 	        bobcat.moveRight();
 
-		gui.update();                  // redesenha a lista de ImageTiles na GUI, 
-		                               // tendo em conta as novas posicoes dos objetos
+		gui.update();                
+		                
 	}
 
 	private void readLevelFromFile() {
@@ -131,13 +118,13 @@ public class GameEngine implements Observer {
 		
 		switch(element) {
 			case "#":
-				tileList.add(new Parede(new Point2D(x,y)));
+				elementList.add(new Parede(new Point2D(x,y)));
 				break;
 			case "=":
-				tileList.add(new Vazio(new Point2D(x, y)));
+				elementList.add(new Vazio(new Point2D(x, y)));
 				break;
 			case " ":
-				tileList.add(new Chao(new Point2D(x, y)));
+				elementList.add(new Chao(new Point2D(x, y)));
 				break;
 		}
 		
@@ -153,15 +140,15 @@ public class GameEngine implements Observer {
 		
 		switch(element) {
 			case "E":
-				bobcat = new Empilhadora(new Point2D(x, y));
-				tileList.add(bobcat);
-				tileList.add(new Chao(new Point2D(x, y)));
+				bobcat = new Empilhadora(new Point2D(x, y), INSTANCE);
+				elementList.add(bobcat);
+				elementList.add(new Chao(new Point2D(x, y)));
 				break;
 			case "C":
-				tileList.add(new Caixote(new Point2D(x, y)));
+				elementList.add(new Caixote(new Point2D(x, y)));
 				break;
 			case "X":
-				tileList.add(new Alvo(new Point2D(x, y)));
+				elementList.add(new Alvo(new Point2D(x, y)));
 				break;
 			case "B":
 				break;
@@ -184,10 +171,28 @@ public class GameEngine implements Observer {
 		tileList.add(new Caixote(new Point2D(3,3)));
 		tileList.add(new Caixote(new Point2D(3,2)));*/
 	}
+	
+	public GameElement getGameElement(Point2D point)  {
+		for ( GameElement ele : elementList ) {
+			if(ele.getPosition().equals(point)) {
+				
+				return ele;
+			}
+		}
+		
+		return null; 
+
+	}
+
 
 	// Envio das mensagens para a GUI - note que isto so' precisa de ser feito no inicio
 	// Nao e' suposto re-enviar os objetos se a unica coisa que muda sao as posicoes  
 	private void sendImagesToGUI() {
+		
+		tileList = new ArrayList<>(); 
+		for ( int i = 0; i < elementList.size(); i++ ) {
+			tileList.add( elementList.get( i ) );
+		}
 		gui.addImages(tileList);
 	}
 }

@@ -1,19 +1,22 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.sokobanstarter.GameEngine;
+
 import java.util.Random;
 
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Empilhadora extends GameElement{
-
+	private GameEngine instance;
 	private Point2D position;
 	private String imageName;
 	
-	public Empilhadora(Point2D initialPosition){
+	public Empilhadora(Point2D initialPosition, GameEngine INSTANCE){
 		position = initialPosition;
 		imageName = "Empilhadora_D";
+		instance = INSTANCE;
 	}
 	
 	@Override
@@ -30,6 +33,7 @@ public class Empilhadora extends GameElement{
 	public int getLayer() {
 		return 2;
 	}
+	
 	public void moveDown() {
 	    Point2D newPosition = position.plus(Direction.DOWN.asVector());
 	    if (isValidPosition(newPosition)) {
@@ -43,7 +47,7 @@ public class Empilhadora extends GameElement{
 	    if (isValidPosition(newPosition)) {
 	        position = newPosition;
 	        imageName="Empilhadora_L";
-	    }
+	    }	
 	}
 
 	public void moveRight() {
@@ -62,25 +66,13 @@ public class Empilhadora extends GameElement{
 	}
 
 	private boolean isValidPosition(Point2D newPosition) {
+		if(instance.getGameElement( newPosition) == null) return false;
+		if(instance.getGameElement( newPosition).getName().equals("Parede")) {
+			return false;
+		}
+			
 	    return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
 	}
 	
-	
-	
-	public void move() {
-		
-		// Gera uma direcao aleatoria para o movimento
-		Direction[] possibleDirections = Direction.values();
-		Random randomizer = new Random();
-		int randomNumber = randomizer.nextInt(possibleDirections.length);
-		Direction randomDirection = possibleDirections[randomNumber];
-		
-		// Move segundo a direcao gerada, mas so' se estiver dentro dos limites
-		Point2D newPosition = position.plus(randomDirection.asVector());
-		if (newPosition.getX()>=0 && newPosition.getX()<10 && 
-			newPosition.getY()>=0 && newPosition.getY()<10 ){
-			position = newPosition;
-		}
-	}
 }
