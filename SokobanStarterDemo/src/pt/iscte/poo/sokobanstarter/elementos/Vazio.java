@@ -1,5 +1,6 @@
-package pt.iscte.poo.sokobanstarter;
+package pt.iscte.poo.sokobanstarter.elementos;
 
+import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Point2D;
 
 public class Vazio extends GameElement{

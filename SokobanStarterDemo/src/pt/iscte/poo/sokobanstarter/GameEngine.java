@@ -11,12 +11,24 @@ import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
+import pt.iscte.poo.sokobanstarter.elementos.Alvo;
+import pt.iscte.poo.sokobanstarter.elementos.Bateria;
+import pt.iscte.poo.sokobanstarter.elementos.Buraco;
+import pt.iscte.poo.sokobanstarter.elementos.Caixote;
+import pt.iscte.poo.sokobanstarter.elementos.Chao;
+import pt.iscte.poo.sokobanstarter.elementos.Empilhadora;
+import pt.iscte.poo.sokobanstarter.elementos.Martelo;
+import pt.iscte.poo.sokobanstarter.elementos.Palete;
+import pt.iscte.poo.sokobanstarter.elementos.Parede;
+import pt.iscte.poo.sokobanstarter.elementos.ParedeRachada;
+import pt.iscte.poo.sokobanstarter.elementos.Teleporte;
+import pt.iscte.poo.sokobanstarter.elementos.Vazio;
 import pt.iscte.poo.utils.Point2D;
 
 // Note que esta classe e' um exemplo - nao pretende ser o inicio do projeto, 
 // embora tambem possa ser usada para isso.
 //
-// No seu projeto e' suposto haver metodos diferentes.
+// No seu projeto é suposto haver metodos diferentes.
 // 
 // As coisas que comuns com o projeto, e que se pretendem ilustrar aqui, sao:
 // - GameEngine implementa Observer - para  ter o metodo update(...)  
@@ -24,9 +36,9 @@ import pt.iscte.poo.utils.Point2D;
 //        + definir as dimensoes
 //        + registar o objeto GameEngine ativo como observador da GUI
 //        + lancar a GUI
-// - O metodo update(...) e' invocado automaticamente sempre que se carrega numa tecla
+// - O metodo update(...) é invocado automaticamente sempre que se carrega numa tecla
 //
-// Tudo o mais podera' ser diferente!
+// Tudo o mais poderá ser diferente!
 
 
 public class GameEngine implements Observer {
@@ -40,7 +52,7 @@ public class GameEngine implements Observer {
 	private List<ImageTile> tileList;	// Lista de imagens
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
-	private int currentLevel = 0;
+	private int currentLevel = 6;
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
@@ -85,7 +97,7 @@ public class GameEngine implements Observer {
 
 		int key = gui.keyPressed();    // obtem o codigo da tecla pressionada
 
-		if (key == KeyEvent.VK_UP) 
+		if (key == KeyEvent.VK_UP) //Movimentação da Empelhadora
 	        bobcat.moveUP();
 	    if (key == KeyEvent.VK_DOWN)
 	        bobcat.moveDown();
@@ -163,16 +175,23 @@ public class GameEngine implements Observer {
 				tileList.add(new Alvo(new Point2D(x, y)));
 				break;
 			case "B":
+				tileList.add(new Bateria(new Point2D(x, y)));
 				break;
 			case "O":
+				tileList.add(new Buraco(new Point2D(x, y)));
 				break;
 			case "P":
+				tileList.add(new Chao(new Point2D(x, y)));
+				tileList.add(new Palete(new Point2D(x, y)));
 				break;
 			case "M":
+				tileList.add(new Martelo(new Point2D(x, y)));
 				break;
 			case "%":
+				tileList.add(new ParedeRachada(new Point2D(x, y)));
 				break;
 			case "T":
+				tileList.add(new Teleporte(new Point2D(x, y)));
 				break;
 		}
 		
