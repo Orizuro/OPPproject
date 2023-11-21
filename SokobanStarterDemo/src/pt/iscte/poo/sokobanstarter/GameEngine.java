@@ -11,6 +11,18 @@ import pt.iscte.poo.gui.ImageMatrixGUI;
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.observer.Observed;
 import pt.iscte.poo.observer.Observer;
+import pt.iscte.poo.sokobanstarter.elementos.Alvo;
+import pt.iscte.poo.sokobanstarter.elementos.Bateria;
+import pt.iscte.poo.sokobanstarter.elementos.Buraco;
+import pt.iscte.poo.sokobanstarter.elementos.Caixote;
+import pt.iscte.poo.sokobanstarter.elementos.Chao;
+import pt.iscte.poo.sokobanstarter.elementos.Empilhadora;
+import pt.iscte.poo.sokobanstarter.elementos.Martelo;
+import pt.iscte.poo.sokobanstarter.elementos.Palete;
+import pt.iscte.poo.sokobanstarter.elementos.Parede;
+import pt.iscte.poo.sokobanstarter.elementos.ParedeRachada;
+import pt.iscte.poo.sokobanstarter.elementos.Teleporte;
+import pt.iscte.poo.sokobanstarter.elementos.Vazio;
 import pt.iscte.poo.utils.Point2D;
 
 
@@ -115,7 +127,6 @@ public class GameEngine implements Observer {
 	// Criacao da planta do armazem - so' chao neste exemplo 
 	private void createWarehouse(String element, int x, int y) {
 		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
-		
 		switch(element) {
 			case "#":
 				elementList.add(new Parede(new Point2D(x,y)));
@@ -151,16 +162,23 @@ public class GameEngine implements Observer {
 				elementList.add(new Alvo(new Point2D(x, y)));
 				break;
 			case "B":
+				tileList.add(new Bateria(new Point2D(x, y)));
 				break;
 			case "O":
+				tileList.add(new Buraco(new Point2D(x, y)));
 				break;
 			case "P":
+				tileList.add(new Chao(new Point2D(x, y)));
+				tileList.add(new Palete(new Point2D(x, y)));
 				break;
 			case "M":
+				tileList.add(new Martelo(new Point2D(x, y)));
 				break;
 			case "%":
+				tileList.add(new ParedeRachada(new Point2D(x, y)));
 				break;
 			case "T":
+				tileList.add(new Teleporte(new Point2D(x, y)));
 				break;
 		}
 		

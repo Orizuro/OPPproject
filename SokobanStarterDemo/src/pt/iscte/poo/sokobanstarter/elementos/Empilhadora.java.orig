@@ -1,7 +1,10 @@
 package pt.iscte.poo.sokobanstarter.elementos;
+<<<<<<< HEAD
 
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.sokobanstarter.GameEngine;
+=======
+>>>>>>> origin/edu
 
 import java.util.Random;
 
