@@ -1,25 +1,20 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.sokobanstarter.GameEngine;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Caixote extends GameElement{
 
 	private Point2D position;
+	private GameEngine instance;
 	
-	public Caixote(Point2D Point2D){
+	public Caixote(Point2D Point2D, GameEngine INSTANCE){
 		this.position = Point2D;
+		this.instance = INSTANCE;
 	}
-	public void move(Direction direction ) {
-		Point2D newPosition = position.plus(Direction.DOWN.asVector());
-	    if (isValidPosition(newPosition)) {
-	        position = newPosition;
-	    }
-	}
-	private boolean isValidPosition(Point2D position) {
-		return true;
-	}
+
 	
 	@Override
 	public String getName() {
@@ -33,7 +28,32 @@ public class Caixote extends GameElement{
 
 	@Override
 	public int getLayer() {
-		return 0;
+		return 1;
+	}
+	private boolean hasObjectBehind(Direction direction) {
+		Point2D newPosition = position.plus(direction.asVector());
+		GameElement actualElement = instance.getGameElement(newPosition,1);
+		
+		if(actualElement != null) {
+			return true;
+		}
+		return false;
+		
+	}
+	private void move(Direction direction) {
+		Point2D newPosition = position.plus(direction.asVector());
+		GameElement actualElement = instance.getGameElement(newPosition,0);
+		if(actualElement.getName().equals("Alvo")) 
+			instance.removeGameElement(position, getLayer());
+		position = newPosition;
+		
+	}
+	@Override
+	public boolean isMovable(Direction direction) {
+		
+		if(hasObjectBehind(direction)) return false;
+		move(direction);
+		return true;
 	}
 
 }

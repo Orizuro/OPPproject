@@ -1,6 +1,7 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Parede extends GameElement{
@@ -23,7 +24,13 @@ private Point2D Point2D;
 
 	@Override
 	public int getLayer() {
-		return 0;
+		return 1;
+	}
+
+	@Override
+	public boolean isMovable(Direction direction) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

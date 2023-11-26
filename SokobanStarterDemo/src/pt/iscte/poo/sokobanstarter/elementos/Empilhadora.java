@@ -37,7 +37,7 @@ public class Empilhadora extends GameElement{
 	
 	public void moveDown() {
 	    Point2D newPosition = position.plus(Direction.DOWN.asVector());
-	    if (isValidPosition(newPosition)) {
+	    if (isValidPosition(newPosition,Direction.DOWN)) {
 	        position = newPosition;
 	        imageName="Empilhadora_D";
 	    }
@@ -45,7 +45,7 @@ public class Empilhadora extends GameElement{
 
 	public void moveLeft() {
 	    Point2D newPosition = position.plus(Direction.LEFT.asVector());
-	    if (isValidPosition(newPosition)) {
+	    if (isValidPosition(newPosition,Direction.LEFT)) {
 	        position = newPosition;
 	        imageName="Empilhadora_L";
 	    }	
@@ -53,27 +53,35 @@ public class Empilhadora extends GameElement{
 
 	public void moveRight() {
 	    Point2D newPosition = position.plus(Direction.RIGHT.asVector());
-	    if (isValidPosition(newPosition)) {
+	    if (isValidPosition(newPosition,Direction.RIGHT)) {
 	        position = newPosition;
 	        imageName="Empilhadora_R";
 	    }
 	}
 	public void moveUP() {
 	    Point2D newPosition = position.plus(Direction.UP.asVector());
-	    if (isValidPosition(newPosition)) {
+	    if (isValidPosition(newPosition, Direction.UP)) {
 	        position = newPosition;
 	        imageName="Empilhadora_U";
 	    }
 	}
 
-	private boolean isValidPosition(Point2D newPosition) {
-		if(instance.getGameElement( newPosition) == null) return false;
-		if(instance.getGameElement( newPosition).getName().equals("Parede")) {
+	private boolean isValidPosition(Point2D newPosition, Direction direction) {
+		GameElement actualElement = instance.getGameElement(newPosition,1);
+		System.out.println(direction.toString());
+		if(actualElement == null) return true;
+		if(!actualElement.isMovable(direction)){
 			return false;
 		}
 			
 	    return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
+	}
+
+	@Override
+	public boolean isMovable(Direction direction) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 	
 }

@@ -40,6 +40,7 @@ public class GameEngine implements Observer {
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
 	private int currentLevel = 0;
+	private int batteryLevel;
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
@@ -75,7 +76,7 @@ public class GameEngine implements Observer {
 		
 		// Escrever uma mensagem na StatusBarpackage pt.iscte.poo.sokobanstarter;
 
-		gui.setStatusMessage("Sokoban Starter - demo");
+		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ batteryLevel);
 	}
 
 	// O metodo update() e' invocado automaticamente sempre que o utilizador carrega numa tecla
@@ -127,6 +128,7 @@ public class GameEngine implements Observer {
 	// Criacao da planta do armazem - so' chao neste exemplo 
 	private void createWarehouse(String element, int x, int y) {
 		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
+		
 		switch(element) {
 			case "#":
 				elementList.add(new Parede(new Point2D(x,y)));
@@ -151,60 +153,55 @@ public class GameEngine implements Observer {
 		
 		switch(element) {
 			case "E":
+				elementList.add(new Chao(new Point2D(x, y)));
 				bobcat = new Empilhadora(new Point2D(x, y), INSTANCE);
 				elementList.add(bobcat);
-				elementList.add(new Chao(new Point2D(x, y)));
 				break;
 			case "C":
-				elementList.add(new Caixote(new Point2D(x, y)));
+				elementList.add(new Chao(new Point2D(x, y)));
+				elementList.add(new Caixote(new Point2D(x, y),INSTANCE));
 				break;
 			case "X":
 				elementList.add(new Alvo(new Point2D(x, y)));
 				break;
 			case "B":
-				tileList.add(new Bateria(new Point2D(x, y)));
+				elementList.add(new Bateria(new Point2D(x, y)));
 				break;
 			case "O":
-				tileList.add(new Buraco(new Point2D(x, y)));
+				elementList.add(new Buraco(new Point2D(x, y)));
 				break;
 			case "P":
-				tileList.add(new Chao(new Point2D(x, y)));
-				tileList.add(new Palete(new Point2D(x, y)));
+				elementList.add(new Palete(new Point2D(x, y)));
 				break;
 			case "M":
-				tileList.add(new Martelo(new Point2D(x, y)));
+				elementList.add(new Martelo(new Point2D(x, y)));
 				break;
 			case "%":
-				tileList.add(new ParedeRachada(new Point2D(x, y)));
+				elementList.add(new ParedeRachada(new Point2D(x, y)));
 				break;
 			case "T":
-				tileList.add(new Teleporte(new Point2D(x, y)));
+				elementList.add(new Teleporte(new Point2D(x, y)));
 				break;
 		}
 		
-		//Exemplo fornecido
-		/*bobcat = new Empilhadora( new Point2D(5,5));
-		tileList.add(bobcat);
+	}
+	public void removeGameElement(Point2D point, int layer) {
+		int ind = elementList.indexOf(getGameElement(point, layer));
+		
+		elementList.remove(ind);
+		gui.removeImage(tileList.get(ind));
 
-		tileList.add(new Caixote(new Point2D(3,3)));
-		tileList.add(new Caixote(new Point2D(3,2)));*/
 	}
 	
-	public GameElement getGameElement(Point2D point)  {
+	public GameElement getGameElement(Point2D point, int layer)  {
 		for ( GameElement ele : elementList ) {
-			if(ele.getPosition().equals(point)) {
-				
+			if(ele.getPosition().equals(point) && ele.getLayer() == layer) {
 				return ele;
 			}
-		}
-		
+		}		
 		return null; 
-
 	}
 
-
-	// Envio das mensagens para a GUI - note que isto so' precisa de ser feito no inicio
-	// Nao e' suposto re-enviar os objetos se a unica coisa que muda sao as posicoes  
 	private void sendImagesToGUI() {
 		
 		tileList = new ArrayList<>(); 
