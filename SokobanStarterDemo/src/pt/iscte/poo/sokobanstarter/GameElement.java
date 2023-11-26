@@ -10,17 +10,23 @@ public abstract class GameElement implements ImageTile{
 	public abstract Point2D getPosition();
 	public abstract int getLayer();
 	
-	public boolean isMovable(Direction direction) {
+	public boolean isMovable(Direction direction, GameEngine instance) {
 		return false;
 	}
 
-	public boolean isConsumable(Direction direction) {
+	public boolean isConsumable() {
 		return false;
 	}
+	
+	public boolean isColidable() {
+		return false;
+	}
+	
 	public boolean move(Direction direction, GameEngine instance) {
 		return false;
 	}
-	public boolean consume(Direction direction, Empilhadora bobcat, GameEngine instance) {
+	
+	public boolean consume( Empilhadora bobcat, GameEngine instance) {
 		return false;
 	}
 	

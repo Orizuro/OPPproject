@@ -53,9 +53,13 @@ public class Caixote extends GameElement{
 		
 	}
 	@Override
-	public boolean isMovable(Direction direction) {
+	public boolean isMovable(Direction direction, GameEngine instance) {
 		
 		if(hasObjectBehind(direction)) return false;
+		return true;
+	}
+	@Override
+	public boolean isColidable() {
 		return true;
 	}
 

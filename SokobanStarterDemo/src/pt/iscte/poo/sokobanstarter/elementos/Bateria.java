@@ -29,11 +29,11 @@ public class Bateria extends GameElement{
 	}
 	
 	@Override
-	public boolean isConsumable(Direction direction) {
+	public boolean isConsumable() {
 		return true;
 	}
 	
-	public boolean consume(Direction direction, Empilhadora bobcat, GameEngine instance) {
+	public boolean consume( Empilhadora bobcat, GameEngine instance) {
 		bobcat.batteryLevel += 50;
 		instance.removeGameElement(position, getLayer());
 		return true;

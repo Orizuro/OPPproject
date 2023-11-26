@@ -26,6 +26,10 @@ private Point2D Point2D;
 	public int getLayer() {
 		return 1;
 	}
+	@Override
+	public boolean isColidable() {
+		return true;
+	}
 
 
 }

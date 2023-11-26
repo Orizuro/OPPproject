@@ -3,6 +3,7 @@ package pt.iscte.poo.sokobanstarter.elementos;
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.sokobanstarter.GameEngine;
 
+import java.util.List;
 import java.util.Random;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
@@ -36,26 +37,25 @@ public class Empilhadora extends GameElement{
 	public int getLayer() {
 		return 2;
 	}
+	
 	public int getBatteryLevel() {
 		return batteryLevel;
 	}
 	
-	public boolean move(Direction direction) {
+	@Override
+	public boolean move(Direction direction, GameEngine instance) {
 	    Point2D newPosition = position.plus(direction.asVector());
-	    GameElement ColidableElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),1);
-	    GameElement ConsumableeElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),2);
-	    if (isValidPosition(ColidableElement, newPosition, direction) && batteryLevel > 0 ) {
+	    List<GameElement> elementList = instance.getGameElement(newPosition);
+	    if (isValidPosition(elementList, newPosition, direction) && batteryLevel > 0 ) {
 	    	
-	    	try {
-	    		if(ColidableElement.move(direction, instance) && batteryLevel > 1 ) {
+	    	for(GameElement element : elementList) {
+	    		if(element.move(direction, instance) && batteryLevel > 1 ) {
 	    			batteryLevel = batteryLevel-1;
 	    		}
-	    	}catch(NullPointerException ex) { 
+	    		if(element.isConsumable())
+	    			element.consume( this, instance);
 	    	}
-	    	try {
-	    		ConsumableeElement.consume(direction, this, instance);
-	    	}catch(NullPointerException ex) { 
-	    	}
+	    
 	    	
 	    	batteryLevel = batteryLevel-1;
 	        position = newPosition;
@@ -80,20 +80,17 @@ public class Empilhadora extends GameElement{
 	    return false;
 	}
 
-	private boolean isValidPosition(GameElement actualElement, Point2D newPosition, Direction direction) {
-		System.out.println(batteryLevel);
-		try {
-		
-		if(!actualElement.isMovable(direction)){
-			return false;
+	private boolean isValidPosition(List<GameElement> elementList, Point2D newPosition, Direction direction) {
+		for(GameElement element : elementList ) {
+			if(element.isColidable()) {
+				if(!element.isMovable(direction, instance)){
+					return false;
+				}
+			}
 		}
-
 		return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
-		}catch(NullPointerException ex){
-			return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
-			           newPosition.getY() >= 0 && newPosition.getY() < 10;
-		}
+
 	}
 
 

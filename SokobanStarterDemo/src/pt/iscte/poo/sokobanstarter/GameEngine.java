@@ -88,13 +88,13 @@ public class GameEngine implements Observer {
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
-	        bobcat.move(Direction.UP);
+	        bobcat.move(Direction.UP,INSTANCE);
 	    if (key == KeyEvent.VK_DOWN)
-	    	bobcat.move(Direction.DOWN);
+	    	bobcat.move(Direction.DOWN,INSTANCE);
 	    if (key == KeyEvent.VK_LEFT) 
-	    	bobcat.move(Direction.LEFT);
+	    	bobcat.move(Direction.LEFT,INSTANCE);
 	    if (key == KeyEvent.VK_RIGHT)
-	    	bobcat.move(Direction.RIGHT);
+	    	bobcat.move(Direction.RIGHT, INSTANCE);
 
 		gui.update();                
 		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);                
@@ -201,7 +201,6 @@ public class GameEngine implements Observer {
 	}
 	
 	public GameElement getGAmeElementFromLayer(List<GameElement> allElements, int layer) {
-		if(allElements == null)return null;
 		for ( GameElement ele : allElements ) {
 			if(ele.getLayer() == layer) {
 				return ele;

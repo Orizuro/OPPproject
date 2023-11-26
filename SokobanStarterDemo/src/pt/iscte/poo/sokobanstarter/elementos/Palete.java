@@ -1,6 +1,7 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.sokobanstarter.GameEngine;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
@@ -28,7 +29,7 @@ public class Palete extends GameElement{
 	}
 
 	@Override
-	public boolean isMovable(Direction direction) {
+	public boolean isMovable(Direction direction, GameEngine instance) {
 		return true;
 	}
 }
