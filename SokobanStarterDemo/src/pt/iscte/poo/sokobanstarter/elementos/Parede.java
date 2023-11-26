@@ -27,10 +27,5 @@ private Point2D Point2D;
 		return 1;
 	}
 
-	@Override
-	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 }

@@ -23,6 +23,7 @@ import pt.iscte.poo.sokobanstarter.elementos.Parede;
 import pt.iscte.poo.sokobanstarter.elementos.ParedeRachada;
 import pt.iscte.poo.sokobanstarter.elementos.Teleporte;
 import pt.iscte.poo.sokobanstarter.elementos.Vazio;
+import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 
@@ -39,8 +40,8 @@ public class GameEngine implements Observer {
 	private List<GameElement> elementList;// Lista de imagens
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
-	private int currentLevel = 0;
-	private int batteryLevel;
+	private int currentLevel = 6;
+
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
@@ -76,9 +77,9 @@ public class GameEngine implements Observer {
 		
 		// Escrever uma mensagem na StatusBarpackage pt.iscte.poo.sokobanstarter;
 
-		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ batteryLevel);
+		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
 	}
-
+	
 	// O metodo update() e' invocado automaticamente sempre que o utilizador carrega numa tecla
 	// no argumento do metodo e' passada uma referencia para o objeto observado (neste caso a GUI)
 	@Override
@@ -87,16 +88,16 @@ public class GameEngine implements Observer {
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
-	        bobcat.moveUP();
+	        bobcat.move(Direction.UP);
 	    if (key == KeyEvent.VK_DOWN)
-	        bobcat.moveDown();
+	    	bobcat.move(Direction.DOWN);
 	    if (key == KeyEvent.VK_LEFT) 
-	        bobcat.moveLeft();
+	    	bobcat.move(Direction.LEFT);
 	    if (key == KeyEvent.VK_RIGHT)
-	        bobcat.moveRight();
+	    	bobcat.move(Direction.RIGHT);
 
 		gui.update();                
-		                
+		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);                
 	}
 
 	private void readLevelFromFile() {
@@ -110,10 +111,8 @@ public class GameEngine implements Observer {
 				String line = scanner.nextLine();
 				String[] elements = line.split("");
 				for(int i = 0; i<elements.length; i++) {
-					if(elements[i].contains("#") || elements[i].contains("=") || elements[i].contains(" "))
-						createWarehouse(elements[i], x, y);
-					else if(elements[i].contains("C") ||elements[i].contains("X") ||elements[i].contains("E") ||elements[i].contains("B") ||elements[i].contains("T") ||elements[i].contains("O") ||elements[i].contains("P") ||elements[i].contains("M") ||elements[i].contains("%"))
-						createMoreStuff(elements[i], x, y);
+					if(createWarehouse(elements[i],x,y))elementList.add(new Chao(new Point2D(x, y)));
+					createMoreStuff(elements[i],x,y);
 					x++;
 				}
 				y++;
@@ -126,20 +125,24 @@ public class GameEngine implements Observer {
 	}
 
 	// Criacao da planta do armazem - so' chao neste exemplo 
-	private void createWarehouse(String element, int x, int y) {
+	private boolean createWarehouse(String element, int x, int y) {
 		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
-		
+		boolean result = true;
 		switch(element) {
+			case "X":
+				elementList.add(new Alvo(new Point2D(x, y)));
+				result = false;
+				break;
 			case "#":
 				elementList.add(new Parede(new Point2D(x,y)));
+				result = false;
 				break;
 			case "=":
 				elementList.add(new Vazio(new Point2D(x, y)));
-				break;
-			case " ":
-				elementList.add(new Chao(new Point2D(x, y)));
+				result = false;
 				break;
 		}
+		return result;
 		
 		//Exemplo fornecido
 		/*for (int y=0; y<GRID_HEIGHT; y++)
@@ -150,20 +153,15 @@ public class GameEngine implements Observer {
 	// Criacao de mais objetos - neste exemplo e' uma empilhadora e dois caixotes
 	private void createMoreStuff(String element, int x, int y) {
 		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
-		
 		switch(element) {
 			case "E":
-				elementList.add(new Chao(new Point2D(x, y)));
 				bobcat = new Empilhadora(new Point2D(x, y), INSTANCE);
 				elementList.add(bobcat);
 				break;
 			case "C":
-				elementList.add(new Chao(new Point2D(x, y)));
-				elementList.add(new Caixote(new Point2D(x, y),INSTANCE));
+				elementList.add(new Caixote(new Point2D(x, y), INSTANCE));
 				break;
-			case "X":
-				elementList.add(new Alvo(new Point2D(x, y)));
-				break;
+			
 			case "B":
 				elementList.add(new Bateria(new Point2D(x, y)));
 				break;
@@ -186,20 +184,30 @@ public class GameEngine implements Observer {
 		
 	}
 	public void removeGameElement(Point2D point, int layer) {
-		int ind = elementList.indexOf(getGameElement(point, layer));
 		
-		elementList.remove(ind);
-		gui.removeImage(tileList.get(ind));
+		gui.removeImage(getGAmeElementFromLayer(getGameElement(point), layer));
+		elementList.remove(getGAmeElementFromLayer(getGameElement(point), layer));
 
 	}
 	
-	public GameElement getGameElement(Point2D point, int layer)  {
+	public List<GameElement> getGameElement(Point2D point)  {
+		List<GameElement> allElements = new ArrayList<>();
 		for ( GameElement ele : elementList ) {
-			if(ele.getPosition().equals(point) && ele.getLayer() == layer) {
-				return ele;
+			if(ele.getPosition().equals(point)) {
+				allElements.add(ele);
 			}
 		}		
-		return null; 
+		return allElements; 
+	}
+	
+	public GameElement getGAmeElementFromLayer(List<GameElement> allElements, int layer) {
+		if(allElements == null)return null;
+		for ( GameElement ele : allElements ) {
+			if(ele.getLayer() == layer) {
+				return ele;
+			}
+		}
+		return null;
 	}
 
 	private void sendImagesToGUI() {

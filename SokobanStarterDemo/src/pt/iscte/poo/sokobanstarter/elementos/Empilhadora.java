@@ -13,11 +13,13 @@ public class Empilhadora extends GameElement{
 	private GameEngine instance;
 	private Point2D position;
 	private String imageName;
+	public int batteryLevel;
 	
 	public Empilhadora(Point2D initialPosition, GameEngine INSTANCE){
 		position = initialPosition;
 		imageName = "Empilhadora_D";
 		instance = INSTANCE;
+		batteryLevel = 100;
 	}
 	
 	@Override
@@ -34,54 +36,66 @@ public class Empilhadora extends GameElement{
 	public int getLayer() {
 		return 2;
 	}
+	public int getBatteryLevel() {
+		return batteryLevel;
+	}
 	
-	public void moveDown() {
-	    Point2D newPosition = position.plus(Direction.DOWN.asVector());
-	    if (isValidPosition(newPosition,Direction.DOWN)) {
+	public boolean move(Direction direction) {
+	    Point2D newPosition = position.plus(direction.asVector());
+	    GameElement ColidableElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),1);
+	    GameElement ConsumableeElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),2);
+	    if (isValidPosition(ColidableElement, newPosition, direction) && batteryLevel > 0 ) {
+	    	
+	    	try {
+	    		if(ColidableElement.move(direction, instance) && batteryLevel > 1 ) {
+	    			batteryLevel = batteryLevel-1;
+	    		}
+	    	}catch(NullPointerException ex) { 
+	    	}
+	    	try {
+	    		ConsumableeElement.consume(direction, this, instance);
+	    	}catch(NullPointerException ex) { 
+	    	}
+	    	
+	    	batteryLevel = batteryLevel-1;
 	        position = newPosition;
-	        imageName="Empilhadora_D";
+	        
+	        switch (direction) {
+	            case UP:
+	                imageName = "Empilhadora_U";
+	                break;
+	            case DOWN:
+	                imageName = "Empilhadora_D";
+	                break;
+	            case LEFT:
+	                imageName = "Empilhadora_L";
+	                break;
+	            case RIGHT:
+	                imageName = "Empilhadora_R";
+	                break;
+	            // Add more cases if needed
+	        }
+	        return true;
 	    }
+	    return false;
 	}
 
-	public void moveLeft() {
-	    Point2D newPosition = position.plus(Direction.LEFT.asVector());
-	    if (isValidPosition(newPosition,Direction.LEFT)) {
-	        position = newPosition;
-	        imageName="Empilhadora_L";
-	    }	
-	}
-
-	public void moveRight() {
-	    Point2D newPosition = position.plus(Direction.RIGHT.asVector());
-	    if (isValidPosition(newPosition,Direction.RIGHT)) {
-	        position = newPosition;
-	        imageName="Empilhadora_R";
-	    }
-	}
-	public void moveUP() {
-	    Point2D newPosition = position.plus(Direction.UP.asVector());
-	    if (isValidPosition(newPosition, Direction.UP)) {
-	        position = newPosition;
-	        imageName="Empilhadora_U";
-	    }
-	}
-
-	private boolean isValidPosition(Point2D newPosition, Direction direction) {
-		GameElement actualElement = instance.getGameElement(newPosition,1);
-		System.out.println(direction.toString());
-		if(actualElement == null) return true;
+	private boolean isValidPosition(GameElement actualElement, Point2D newPosition, Direction direction) {
+		System.out.println(batteryLevel);
+		try {
+		
 		if(!actualElement.isMovable(direction)){
 			return false;
 		}
-			
-	    return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
+
+		return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
+		}catch(NullPointerException ex){
+			return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
+			           newPosition.getY() >= 0 && newPosition.getY() < 10;
+		}
 	}
 
-	@Override
-	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
-		return true;
-	}
+
 	
 }

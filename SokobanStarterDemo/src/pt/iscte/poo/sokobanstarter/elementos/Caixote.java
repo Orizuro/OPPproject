@@ -32,7 +32,7 @@ public class Caixote extends GameElement{
 	}
 	private boolean hasObjectBehind(Direction direction) {
 		Point2D newPosition = position.plus(direction.asVector());
-		GameElement actualElement = instance.getGameElement(newPosition,1);
+		GameElement actualElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),1);
 		
 		if(actualElement != null) {
 			return true;
@@ -40,19 +40,22 @@ public class Caixote extends GameElement{
 		return false;
 		
 	}
-	private void move(Direction direction) {
+	
+	@Override
+	public boolean move(Direction direction, GameEngine instance) {
+		if(hasObjectBehind(direction)) return false;
 		Point2D newPosition = position.plus(direction.asVector());
-		GameElement actualElement = instance.getGameElement(newPosition,0);
+		GameElement actualElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),0);
 		if(actualElement.getName().equals("Alvo")) 
 			instance.removeGameElement(position, getLayer());
 		position = newPosition;
+		return true;
 		
 	}
 	@Override
 	public boolean isMovable(Direction direction) {
 		
 		if(hasObjectBehind(direction)) return false;
-		move(direction);
 		return true;
 	}
 

@@ -27,9 +27,5 @@ public class Martelo extends GameElement{
 		return 0;
 	}
 
-	@Override
-	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 }

@@ -29,7 +29,6 @@ public class Palete extends GameElement{
 
 	@Override
 	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }

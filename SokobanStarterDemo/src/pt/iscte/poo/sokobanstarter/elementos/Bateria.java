@@ -1,15 +1,16 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+import pt.iscte.poo.sokobanstarter.GameEngine;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Bateria extends GameElement{
 	
-	private Point2D Point2D;
+	private Point2D position;
 	
 	public Bateria(Point2D Point2D){
-		this.Point2D = Point2D;
+		this.position = Point2D;
 	}
 	
 	@Override
@@ -19,17 +20,23 @@ public class Bateria extends GameElement{
 
 	@Override
 	public Point2D getPosition() {
-		return Point2D;
+		return position;
 	}
 
 	@Override
 	public int getLayer() {
-		return 0;
+		return 2;
+	}
+	
+	@Override
+	public boolean isConsumable(Direction direction) {
+		return true;
+	}
+	
+	public boolean consume(Direction direction, Empilhadora bobcat, GameEngine instance) {
+		bobcat.batteryLevel += 50;
+		instance.removeGameElement(position, getLayer());
+		return true;
 	}
 
-	@Override
-	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

@@ -24,12 +24,7 @@ public class Buraco extends GameElement{
 
 	@Override
 	public int getLayer() {
-		return 0;
+		return 2;
 	}
 
-	@Override
-	public boolean isMovable(Direction direction) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }
