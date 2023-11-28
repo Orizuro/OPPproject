@@ -11,15 +11,14 @@ import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Empilhadora extends GameElement{
-	private GameEngine instance;
+	private GameEngine instance = GameEngine.getInstance();
 	private Point2D position;
 	private String imageName;
 	public int batteryLevel;
 	
-	public Empilhadora(Point2D initialPosition, GameEngine INSTANCE){
+	public Empilhadora(Point2D initialPosition){
 		position = initialPosition;
 		imageName = "Empilhadora_D";
-		instance = INSTANCE;
 		batteryLevel = 100;
 	}
 	
@@ -43,17 +42,17 @@ public class Empilhadora extends GameElement{
 	}
 	
 	@Override
-	public boolean move(Direction direction, GameEngine instance) {
+	public boolean move(Direction direction) {
 	    Point2D newPosition = position.plus(direction.asVector());
 	    List<GameElement> elementList = instance.getGameElement(newPosition);
 	    if (isValidPosition(elementList, newPosition, direction) && batteryLevel > 0 ) {
 	    	
 	    	for(GameElement element : elementList) {
-	    		if(element.move(direction, instance) && batteryLevel > 1 ) {
+	    		if(element.move(direction) && batteryLevel > 1 ) {
 	    			batteryLevel = batteryLevel-1;
 	    		}
 	    		if(element.isConsumable())
-	    			element.consume( this, instance);
+	    			element.consume( this);
 	    	}
 	    
 	    	
@@ -83,7 +82,7 @@ public class Empilhadora extends GameElement{
 	private boolean isValidPosition(List<GameElement> elementList, Point2D newPosition, Direction direction) {
 		for(GameElement element : elementList ) {
 			if(element.isColidable()) {
-				if(!element.isMovable(direction, instance)){
+				if(!element.isMovable(direction)){
 					return false;
 				}
 			}

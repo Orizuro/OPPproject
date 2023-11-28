@@ -38,14 +38,17 @@ public class GameEngine implements Observer {
 	private ImageMatrixGUI gui;  		// Referencia para ImageMatrixGUI (janela de interface com o utilizador) 
 	private List<ImageTile> tileList;
 	private List<GameElement> elementList;// Lista de imagens
+	private List<GameElement> boxList;  
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
-	private int currentLevel = 6;
+	private int currentLevel = 1;
 
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
 		elementList = new ArrayList<>();   
+
+		 boxList = new ArrayList<>();
 	}
 
 
@@ -55,7 +58,20 @@ public class GameEngine implements Observer {
 			return INSTANCE = new GameEngine();
 		return INSTANCE;
 	}
+	public void restart() {
+		// 2. configurar as dimensoes 
 
+			ImageMatrixGUI.getInstance().clearImages();
+
+			elementList = new ArrayList<>(); 
+			
+			readLevelFromFile(); 
+			sendImagesToGUI();
+
+			gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
+			gui.update();
+		
+	}
 	// Inicio
 	public void start() throws FileNotFoundException {
 
@@ -88,16 +104,22 @@ public class GameEngine implements Observer {
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
-	        bobcat.move(Direction.UP,INSTANCE);
+	        bobcat.move(Direction.UP);
 	    if (key == KeyEvent.VK_DOWN)
-	    	bobcat.move(Direction.DOWN,INSTANCE);
+	    	bobcat.move(Direction.DOWN);
 	    if (key == KeyEvent.VK_LEFT) 
-	    	bobcat.move(Direction.LEFT,INSTANCE);
+	    	bobcat.move(Direction.LEFT);
 	    if (key == KeyEvent.VK_RIGHT)
-	    	bobcat.move(Direction.RIGHT, INSTANCE);
+	    	bobcat.move(Direction.RIGHT);
 
-		gui.update();                
-		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);                
+		gui.update();
+		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
+		System.out.println(boxList.toString());
+		if(boxList.isEmpty()) {
+				currentLevel += 1;
+				 restart();
+		}
+		
 	}
 
 	private void readLevelFromFile() {
@@ -155,11 +177,13 @@ public class GameEngine implements Observer {
 		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
 		switch(element) {
 			case "E":
-				bobcat = new Empilhadora(new Point2D(x, y), INSTANCE);
+				bobcat = new Empilhadora(new Point2D(x, y));
 				elementList.add(bobcat);
 				break;
 			case "C":
-				elementList.add(new Caixote(new Point2D(x, y), INSTANCE));
+				GameElement box = new Caixote(new Point2D(x, y));
+				elementList.add(box);
+				boxList.add(box);
 				break;
 			
 			case "B":
@@ -183,10 +207,11 @@ public class GameEngine implements Observer {
 		}
 		
 	}
-	public void removeGameElement(Point2D point, int layer) {
+	public void removeGameElement(GameElement element) {
 		
-		gui.removeImage(getGAmeElementFromLayer(getGameElement(point), layer));
-		elementList.remove(getGAmeElementFromLayer(getGameElement(point), layer));
+		gui.removeImage(element);
+		elementList.remove(element);
+		boxList.remove(element);
 
 	}
 	

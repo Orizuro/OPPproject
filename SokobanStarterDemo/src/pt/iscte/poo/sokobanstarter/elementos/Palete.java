@@ -29,7 +29,7 @@ public class Palete extends GameElement{
 	}
 
 	@Override
-	public boolean isMovable(Direction direction, GameEngine instance) {
+	public boolean isMovable(Direction direction) {
 		return true;
 	}
 }

@@ -35,7 +35,7 @@ public class Bateria extends GameElement{
 	
 	public boolean consume( Empilhadora bobcat, GameEngine instance) {
 		bobcat.batteryLevel += 50;
-		instance.removeGameElement(position, getLayer());
+		instance.removeGameElement(this);
 		return true;
 	}
 

@@ -8,11 +8,10 @@ import pt.iscte.poo.utils.Point2D;
 public class Caixote extends GameElement{
 
 	private Point2D position;
-	private GameEngine instance;
+	private GameEngine instance = GameEngine.getInstance();
 	
-	public Caixote(Point2D Point2D, GameEngine INSTANCE){
+	public Caixote(Point2D Point2D){
 		this.position = Point2D;
-		this.instance = INSTANCE;
 	}
 
 	
@@ -42,18 +41,18 @@ public class Caixote extends GameElement{
 	}
 	
 	@Override
-	public boolean move(Direction direction, GameEngine instance) {
+	public boolean move(Direction direction) {
 		if(hasObjectBehind(direction)) return false;
 		Point2D newPosition = position.plus(direction.asVector());
 		GameElement actualElement = instance.getGAmeElementFromLayer(instance.getGameElement(newPosition),0);
 		if(actualElement.getName().equals("Alvo")) 
-			instance.removeGameElement(position, getLayer());
+			instance.removeGameElement(this);
 		position = newPosition;
 		return true;
 		
 	}
 	@Override
-	public boolean isMovable(Direction direction, GameEngine instance) {
+	public boolean isMovable(Direction direction) {
 		
 		if(hasObjectBehind(direction)) return false;
 		return true;
