@@ -1,34 +1,47 @@
 package pt.iscte.poo.sokobanstarter;
 
+import java.util.List;
+
 import pt.iscte.poo.gui.ImageTile;
 import pt.iscte.poo.sokobanstarter.elementos.Empilhadora;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public abstract class GameElement implements ImageTile{
-	public abstract String getName();
-	public abstract Point2D getPosition();
+
+	protected GameEngine instance = GameEngine.getInstance();
+	protected Point2D Point2D;
+	protected Empilhadora bobcat;
+	
+	public GameElement(Point2D Point2D) {
+		this.Point2D = Point2D;
+	};
+	
+	public Point2D getPosition() {
+		return Point2D;
+	}
+	
 	public abstract int getLayer();
 	
-	public boolean isMovable(Direction direction) {
+	public abstract String getName();
+	
+	public  boolean isColidable(Empilhadora bobcat) {
+		this.bobcat = bobcat;
 		return false;
 	}
 
-	public boolean isConsumable() {
-		return false;
-	}
 	
-	public boolean isColidable() {
+	public boolean hasObjectBehind(Direction direction) {
+		Point2D newPosition = Point2D.plus(direction.asVector());
+		List<GameElement> actualElement = instance.getGameElement(newPosition);
+		
+		for(GameElement element: actualElement) {
+			if(element.isColidable(bobcat)) return true;
+		}
 		return false;
+		
 	}
-	
-	public boolean move(Direction direction) {
-		return false;
-	}
-	
-	public boolean consume( Empilhadora bobcat) {
-		return false;
-	}
+
 	
 
 

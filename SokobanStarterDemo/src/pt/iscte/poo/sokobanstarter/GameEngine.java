@@ -38,17 +38,18 @@ public class GameEngine implements Observer {
 	private ImageMatrixGUI gui;  		// Referencia para ImageMatrixGUI (janela de interface com o utilizador) 
 	private List<ImageTile> tileList;
 	private List<GameElement> elementList;// Lista de imagens
-	private List<GameElement> boxList;  
+	private List<GameElement> alvoList;  
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
 
-	private int currentLevel = 1;
+	private int currentLevel = 5;
 
 
 	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
 	private GameEngine() {
-		elementList = new ArrayList<>();   
+		elementList = new ArrayList<>();  
+		 alvoList = new ArrayList<>();
 
-		 boxList = new ArrayList<>();
+		
 	}
 
 
@@ -62,45 +63,35 @@ public class GameEngine implements Observer {
 		// 2. configurar as dimensoes 
 
 			ImageMatrixGUI.getInstance().clearImages();
-
+			alvoList = new ArrayList<>();
 			elementList = new ArrayList<>(); 
 			
 			readLevelFromFile(); 
 			sendImagesToGUI();
+			
+			gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
 
-			gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
 			gui.update();
 		
 	}
 	// Inicio
-	public void start() throws FileNotFoundException {
-
-		// Setup inicial da janela que faz a interface com o utilizador
-		// algumas coisas poderiam ser feitas no main, mas estes passos tem sempre que ser feitos!
-		
+	public void start() throws FileNotFoundException {		
 		gui = ImageMatrixGUI.getInstance();    // 1. obter instancia ativa de ImageMatrixGUI	
 		gui.setSize(GRID_HEIGHT, GRID_WIDTH);  // 2. configurar as dimensoes 
-		gui.registerObserver(this);            // 3. registar o objeto ativo GameEngine como observador da GUI
-		gui.go();                              // 4. lancar a GUI
-
-		
+		gui.registerObserver(this);
 		// Criar o cenario de jogo
 		readLevelFromFile();
-		//createWarehouse();      // criar o armazem
-		//createMoreStuff();      // criar mais algun objetos (empilhadora, caixotes,...)
-		sendImagesToGUI();      // enviar as imagens para a GUI
-
+		sendImagesToGUI();
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+		gui.update();	// 3. registar o objeto ativo GameEngine como observador da GUI
 		
-		// Escrever uma mensagem na StatusBarpackage pt.iscte.poo.sokobanstarter;
-
-		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
+		gui.go();                              // 4. lancar a GUI
 	}
 	
 	// O metodo update() e' invocado automaticamente sempre que o utilizador carrega numa tecla
 	// no argumento do metodo e' passada uma referencia para o objeto observado (neste caso a GUI)
 	@Override
 	public void update(Observed source) {
-
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
@@ -111,14 +102,18 @@ public class GameEngine implements Observer {
 	    	bobcat.move(Direction.LEFT);
 	    if (key == KeyEvent.VK_RIGHT)
 	    	bobcat.move(Direction.RIGHT);
-
-		gui.update();
-		gui.setStatusMessage("Sokoban Starter - demo  Battery: "+ bobcat.batteryLevel);
-		System.out.println(boxList.toString());
-		if(boxList.isEmpty()) {
-				currentLevel += 1;
-				 restart();
+	
+		if(checkalvoList()) {
+			currentLevel ++;
+			restart();
 		}
+		
+		if(key == KeyEvent.VK_R)
+			restart();
+		
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+		
+		gui.update();
 		
 	}
 
@@ -152,7 +147,9 @@ public class GameEngine implements Observer {
 		boolean result = true;
 		switch(element) {
 			case "X":
-				elementList.add(new Alvo(new Point2D(x, y)));
+				GameElement alvo = new Alvo(new Point2D(x, y));
+				elementList.add(alvo);
+				alvoList.add(alvo);
 				result = false;
 				break;
 			case "#":
@@ -181,9 +178,7 @@ public class GameEngine implements Observer {
 				elementList.add(bobcat);
 				break;
 			case "C":
-				GameElement box = new Caixote(new Point2D(x, y));
-				elementList.add(box);
-				boxList.add(box);
+				elementList.add( new Caixote(new Point2D(x, y)));
 				break;
 			
 			case "B":
@@ -207,11 +202,18 @@ public class GameEngine implements Observer {
 		}
 		
 	}
+	private boolean checkalvoList() {
+		for(GameElement element : alvoList) {
+			if(!searchElement(getGameElement(element.getPosition()),"Caixote")) 
+				return false;
+			
+		}
+		return true;
+	}
 	public void removeGameElement(GameElement element) {
 		
 		gui.removeImage(element);
 		elementList.remove(element);
-		boxList.remove(element);
 
 	}
 	
@@ -225,13 +227,13 @@ public class GameEngine implements Observer {
 		return allElements; 
 	}
 	
-	public GameElement getGAmeElementFromLayer(List<GameElement> allElements, int layer) {
+	public boolean searchElement(List<GameElement> allElements, String name) {
 		for ( GameElement ele : allElements ) {
-			if(ele.getLayer() == layer) {
-				return ele;
+			if(ele.getName().equals(name)) {
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	private void sendImagesToGUI() {

@@ -1,8 +1,11 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
+import pt.iscte.poo.sokobanstarter.Consumable;
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.sokobanstarter.GameEngine;
+import pt.iscte.poo.sokobanstarter.Movable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -10,16 +13,36 @@ import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
-public class Empilhadora extends GameElement{
-	private GameEngine instance = GameEngine.getInstance();
-	private Point2D position;
+public class Empilhadora extends GameElement implements Movable{
+
 	private String imageName;
-	public int batteryLevel;
+	private int batteryLevel;
+	private List<GameElement> toolList = new ArrayList<GameElement>();
 	
-	public Empilhadora(Point2D initialPosition){
-		position = initialPosition;
+	public Empilhadora(Point2D Point2D){
+		super(Point2D);
 		imageName = "Empilhadora_D";
 		batteryLevel = 100;
+	}
+	
+	public int getBateryLevel() {
+		return batteryLevel;
+	}
+	
+	public void setBatteryLevel(int val) {
+		batteryLevel =batteryLevel+val;
+	}
+	
+	public void addToll(GameElement tool){
+		toolList.add(tool);
+	}
+	
+	public boolean searchToll(String tool) {
+		for(GameElement element : toolList ) {
+			if(element.getName().equals(tool));
+				return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -27,10 +50,7 @@ public class Empilhadora extends GameElement{
 		return imageName;
 	}
 
-	@Override
-	public Point2D getPosition() {
-		return position;
-	}
+
 
 	@Override
 	public int getLayer() {
@@ -43,46 +63,34 @@ public class Empilhadora extends GameElement{
 	
 	@Override
 	public boolean move(Direction direction) {
-	    Point2D newPosition = position.plus(direction.asVector());
+	    Point2D newPosition = Point2D.plus(direction.asVector());
 	    List<GameElement> elementList = instance.getGameElement(newPosition);
-	    if (isValidPosition(elementList, newPosition, direction) && batteryLevel > 0 ) {
-	    	
+	    if (isValidPosition(elementList, newPosition, direction)  ) {
+	    	batteryLevel--;	    	
 	    	for(GameElement element : elementList) {
-	    		if(element.move(direction) && batteryLevel > 1 ) {
-	    			batteryLevel = batteryLevel-1;
-	    		}
-	    		if(element.isConsumable())
-	    			element.consume( this);
+	    		if(element instanceof Consumable) {
+	    			((Consumable) element).consume(this);
+	    		} 
 	    	}
-	    
-	    	
-	    	batteryLevel = batteryLevel-1;
-	        position = newPosition;
-	        
-	        switch (direction) {
-	            case UP:
-	                imageName = "Empilhadora_U";
-	                break;
-	            case DOWN:
-	                imageName = "Empilhadora_D";
-	                break;
-	            case LEFT:
-	                imageName = "Empilhadora_L";
-	                break;
-	            case RIGHT:
-	                imageName = "Empilhadora_R";
-	                break;
-	            // Add more cases if needed
-	        }
+	    	Point2D = newPosition;
+            imageName = "Empilhadora_" + direction.name().charAt(0);
 	        return true;
 	    }
 	    return false;
 	}
 
 	private boolean isValidPosition(List<GameElement> elementList, Point2D newPosition, Direction direction) {
+		if(batteryLevel == 0)return false;
 		for(GameElement element : elementList ) {
-			if(element.isColidable()) {
-				if(!element.isMovable(direction)){
+			if(element.isColidable(this)&& batteryLevel >  1) {
+				if(element instanceof Movable) {
+					if(((Movable) element).move(direction)) {
+						batteryLevel --;
+						return true;
+					} else {
+						return false;
+					}
+				} else {
 					return false;
 				}
 			}
@@ -91,6 +99,7 @@ public class Empilhadora extends GameElement{
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
 
 	}
+
 
 
 	
