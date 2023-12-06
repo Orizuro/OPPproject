@@ -11,7 +11,6 @@ public abstract class GameElement implements ImageTile{
 
 	protected GameEngine instance = GameEngine.getInstance();
 	protected Point2D Point2D;
-	protected Empilhadora bobcat;
 	
 	public GameElement(Point2D Point2D) {
 		this.Point2D = Point2D;
@@ -25,22 +24,11 @@ public abstract class GameElement implements ImageTile{
 	
 	public abstract String getName();
 	
-	public  boolean isColidable(Empilhadora bobcat) {
-		this.bobcat = bobcat;
+	public  boolean isColidable() {
 		return false;
 	}
 
 	
-	public boolean hasObjectBehind(Direction direction) {
-		Point2D newPosition = Point2D.plus(direction.asVector());
-		List<GameElement> actualElement = instance.getGameElement(newPosition);
-		
-		for(GameElement element: actualElement) {
-			if(element.isColidable(bobcat)) return true;
-		}
-		return false;
-		
-	}
 
 	
 

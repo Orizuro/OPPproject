@@ -38,32 +38,30 @@ public class GameEngine implements Observer {
 	private ImageMatrixGUI gui;  		// Referencia para ImageMatrixGUI (janela de interface com o utilizador) 
 	private List<ImageTile> tileList;
 	private List<GameElement> elementList;// Lista de imagens
-	private List<GameElement> alvoList;  
+	private List<GameElement> elementUpdate;  
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
-
-	private int currentLevel = 5;
-
-
-	// Construtor - neste exemplo apenas inicializa uma lista de ImageTiles
+	private int currentLevel = 0;
+	
 	private GameEngine() {
 		elementList = new ArrayList<>();  
-		 alvoList = new ArrayList<>();
-
-		
+		elementUpdate = new ArrayList<>();
 	}
 
-
-	// Implementacao do singleton para o GameEngine
 	public static GameEngine getInstance() {
 		if (INSTANCE==null)
 			return INSTANCE = new GameEngine();
 		return INSTANCE;
 	}
+	
+	public void lose() {
+		restart();
+	}
+	
 	public void restart() {
-		// 2. configurar as dimensoes 
+
 
 			ImageMatrixGUI.getInstance().clearImages();
-			alvoList = new ArrayList<>();
+			elementUpdate = new ArrayList<>();
 			elementList = new ArrayList<>(); 
 			
 			readLevelFromFile(); 
@@ -88,10 +86,35 @@ public class GameEngine implements Observer {
 		gui.go();                              // 4. lancar a GUI
 	}
 	
-	// O metodo update() e' invocado automaticamente sempre que o utilizador carrega numa tecla
-	// no argumento do metodo e' passada uma referencia para o objeto observado (neste caso a GUI)
-	@Override
+	private void ceckWon() {
+		for(GameElement element : elementUpdate) {
+			if(element instanceof Alvo) {
+				if(!((Alvo) element).getBoxOnTop()) return;
+			}	
+		}
+		currentLevel ++;
+		restart();
+	}
+	
+	private void checkIfLost() {
+		int boxes = 0;
+		int alvo = 0;
+		for(GameElement element : elementList) {
+			if(element instanceof Alvo) {
+				alvo ++;
+			}
+			if(element instanceof Caixote) {
+				boxes ++;
+			}	
+		}
+		if(boxes < alvo) {
+			restart();
+		}
+	}
+	
 	public void update(Observed source) {
+		
+		
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
@@ -102,11 +125,12 @@ public class GameEngine implements Observer {
 	    	bobcat.move(Direction.LEFT);
 	    if (key == KeyEvent.VK_RIGHT)
 	    	bobcat.move(Direction.RIGHT);
-	
-		if(checkalvoList()) {
-			currentLevel ++;
-			restart();
+	    
+		for(GameElement element : elementUpdate) {
+			((onUpdateElement) element).elementUpdate();
 		}
+		ceckWon();
+		checkIfLost();
 		
 		if(key == KeyEvent.VK_R)
 			restart();
@@ -128,7 +152,7 @@ public class GameEngine implements Observer {
 				String line = scanner.nextLine();
 				String[] elements = line.split("");
 				for(int i = 0; i<elements.length; i++) {
-					if(createWarehouse(elements[i],x,y))elementList.add(new Chao(new Point2D(x, y)));
+					createWarehouse(elements[i],x,y);
 					createMoreStuff(elements[i],x,y);
 					x++;
 				}
@@ -142,76 +166,73 @@ public class GameEngine implements Observer {
 	}
 
 	// Criacao da planta do armazem - so' chao neste exemplo 
-	private boolean createWarehouse(String element, int x, int y) {
-		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
-		boolean result = true;
+	private void createWarehouse(String element, int x, int y) {
+		GameElement gameElement= null;
 		switch(element) {
 			case "X":
-				GameElement alvo = new Alvo(new Point2D(x, y));
-				elementList.add(alvo);
-				alvoList.add(alvo);
-				result = false;
+				gameElement = new Alvo(new Point2D(x, y));
 				break;
 			case "#":
-				elementList.add(new Parede(new Point2D(x,y)));
-				result = false;
+				gameElement = new Parede(new Point2D(x,y));
 				break;
 			case "=":
-				elementList.add(new Vazio(new Point2D(x, y)));
-				result = false;
+				gameElement = new Vazio(new Point2D(x, y));
 				break;
+			default:
+				gameElement = new Chao(new Point2D(x, y));
+				break;
+				
 		}
-		return result;
+		elementList.add(gameElement);
+		if(gameElement instanceof onUpdateElement)
+			elementUpdate.add(gameElement);
 		
-		//Exemplo fornecido
-		/*for (int y=0; y<GRID_HEIGHT; y++)
-			for (int x=0; x<GRID_HEIGHT; x++)
-				tileList.add(new Chao(new Point2D(x,y)));*/	
 	}
 
-	// Criacao de mais objetos - neste exemplo e' uma empilhadora e dois caixotes
 	private void createMoreStuff(String element, int x, int y) {
-		//System.out.println("Elemento: "+elements+" x="+x+" y="+y); //debug
+		GameElement gameElement = null;
 		switch(element) {
 			case "E":
 				bobcat = new Empilhadora(new Point2D(x, y));
 				elementList.add(bobcat);
 				break;
 			case "C":
-				elementList.add( new Caixote(new Point2D(x, y)));
+				gameElement = ( new Caixote(new Point2D(x, y)));
 				break;
 			
 			case "B":
-				elementList.add(new Bateria(new Point2D(x, y)));
+				gameElement = (new Bateria(new Point2D(x, y)));
 				break;
 			case "O":
-				elementList.add(new Buraco(new Point2D(x, y)));
+				gameElement = (new Buraco(new Point2D(x, y)));
 				break;
 			case "P":
-				elementList.add(new Palete(new Point2D(x, y)));
+				gameElement = (new Palete(new Point2D(x, y)));
 				break;
 			case "M":
-				elementList.add(new Martelo(new Point2D(x, y)));
+				gameElement = (new Martelo(new Point2D(x, y)));
 				break;
 			case "%":
-				elementList.add(new ParedeRachada(new Point2D(x, y)));
+				gameElement = (new ParedeRachada(new Point2D(x, y)));
 				break;
 			case "T":
-				elementList.add(new Teleporte(new Point2D(x, y)));
+				gameElement = new Teleporte(new Point2D(x, y));
 				break;
 		}
-		
+		if(gameElement == null) return;
+		elementList.add(gameElement);
+		if(gameElement instanceof onUpdateElement)
+			elementUpdate.add(gameElement);
 	}
-	private boolean checkalvoList() {
-		for(GameElement element : alvoList) {
-			if(!searchElement(getGameElement(element.getPosition()),"Caixote")) 
-				return false;
-			
-		}
-		return true;
+	
+	
+	public List<GameElement> getUpdateElmets(){
+		return elementUpdate;
 	}
+	
+	
 	public void removeGameElement(GameElement element) {
-		
+
 		gui.removeImage(element);
 		elementList.remove(element);
 

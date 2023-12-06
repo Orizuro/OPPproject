@@ -21,7 +21,7 @@ public class Parede extends GameElement{
 	}
 	
 	@Override
-	public boolean isColidable(Empilhadora bobcat) {
+	public boolean isColidable() {
 		return true;
 	}
 

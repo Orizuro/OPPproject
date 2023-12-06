@@ -14,7 +14,8 @@ import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Empilhadora extends GameElement implements Movable{
-
+	
+	private boolean tele = false;
 	private String imageName;
 	private int batteryLevel;
 	private List<GameElement> toolList = new ArrayList<GameElement>();
@@ -67,6 +68,7 @@ public class Empilhadora extends GameElement implements Movable{
 	    List<GameElement> elementList = instance.getGameElement(newPosition);
 	    if (isValidPosition(elementList, newPosition, direction)  ) {
 	    	batteryLevel--;	    	
+	    	tele = false;
 	    	for(GameElement element : elementList) {
 	    		if(element instanceof Consumable) {
 	    			((Consumable) element).consume(this);
@@ -76,13 +78,17 @@ public class Empilhadora extends GameElement implements Movable{
             imageName = "Empilhadora_" + direction.name().charAt(0);
 	        return true;
 	    }
+	    
 	    return false;
 	}
 
 	private boolean isValidPosition(List<GameElement> elementList, Point2D newPosition, Direction direction) {
 		if(batteryLevel == 0)return false;
 		for(GameElement element : elementList ) {
-			if(element.isColidable(this)&& batteryLevel >  1) {
+			if(element instanceof ParedeRachada ) {
+				((ParedeRachada) element).checkKey(this);
+			}
+			if(element.isColidable()&& batteryLevel >  1) {
 				if(element instanceof Movable) {
 					if(((Movable) element).move(direction)) {
 						batteryLevel --;
@@ -97,7 +103,28 @@ public class Empilhadora extends GameElement implements Movable{
 		}
 		return newPosition.getX() >= 0 && newPosition.getX() < 10 &&
 	           newPosition.getY() >= 0 && newPosition.getY() < 10;
+	}
 
+	@Override
+	public boolean hasObjectBehind(Direction direction) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setPosition(Point2D newpoint) {
+		this.Point2D = newpoint;
+	}
+	@Override
+	public void setJustTeletrasported(boolean bool) {
+		tele = bool;
+	}
+
+
+	@Override
+	public boolean justTeletrasported() {
+		return tele;
+		
 	}
 
 

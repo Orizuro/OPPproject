@@ -1,15 +1,12 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
-
-
-
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class ParedeRachada extends GameElement{
 	
-	
+	boolean key = false;
 	
 	public ParedeRachada(Point2D Point2D){
 		super(Point2D);
@@ -20,20 +17,21 @@ public class ParedeRachada extends GameElement{
 		return "ParedeRachada";
 	}
 
-
-
 	@Override
 	public int getLayer() {
 		return 1;
 	}
 	
 	@Override
-	public boolean isColidable(Empilhadora bobcat) {
+	public boolean isColidable() {
+		return !key;
+	}
+	
+	public void checkKey(Empilhadora bobcat) {
 		if(bobcat.searchToll("Martelo")) {
+			key = true;
 			instance.removeGameElement(this);
-			return false;
 		}
-		return true;
 	}
 
 

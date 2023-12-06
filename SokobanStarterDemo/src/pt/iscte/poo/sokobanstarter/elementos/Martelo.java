@@ -2,7 +2,6 @@ package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.Consumable;
 import pt.iscte.poo.sokobanstarter.GameElement;
-import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Martelo extends GameElement implements Consumable{
@@ -22,10 +21,9 @@ public class Martelo extends GameElement implements Consumable{
 	}
 
 	@Override
-	public boolean consume( Empilhadora bobcat) {
+	public void consume( Empilhadora bobcat) {
 		bobcat.addToll( this) ;
 		instance.removeGameElement(this);
-		return true;
 	}
 
 
