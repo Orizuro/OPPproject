@@ -46,4 +46,5 @@ public interface ImageTile {
 	 */
 	int getLayer();
 
+
 }

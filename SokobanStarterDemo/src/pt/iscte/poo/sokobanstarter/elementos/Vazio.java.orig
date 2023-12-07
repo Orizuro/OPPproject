@@ -3,9 +3,16 @@ package pt.iscte.poo.sokobanstarter.elementos;
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Point2D;
 
+<<<<<<< HEAD
+public class Vazio extends GameElement{
+	
+
+	public Vazio(Point2D Point2D){
+=======
 public class Vazio extends GameElement {
 
 	public Vazio(Point2D Point2D) {
+>>>>>>> main
 		super(Point2D);
 	}
 
@@ -18,5 +25,6 @@ public class Vazio extends GameElement {
 	public int getLayer() {
 		return 0;
 	}
+
 
 }

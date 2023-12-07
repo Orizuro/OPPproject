@@ -1,5 +1,5 @@
 package pt.iscte.poo.sokobanstarter;
-import pt.iscte.poo.sokobanstarter.elementos.*;
+<<<<<<< HEAD
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -7,6 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+=======
+import pt.iscte.poo.sokobanstarter.elementos.*;
+>>>>>>> main
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,18 +56,20 @@ public class GameEngine implements Observer {
 	private List<GameElement> elementList;// Lista de imagens
 	private List<GameElement> elementUpdate;  
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
+<<<<<<< HEAD
 	private int currentLevel = 0;
 	private String currentUser = " ";
 	
 	Stats stats;
+=======
+	private int currentLevel = 6;
+>>>>>>> main
 	
 	private GameEngine() {
 		elementList = new ArrayList<>();  
 		elementUpdate = new ArrayList<>();
 	}
 
-
-	// Implementacao do singleton para o GameEngine
 	public static GameEngine getInstance() {
 		if (INSTANCE==null)
 			return INSTANCE = new GameEngine();
@@ -76,18 +81,17 @@ public class GameEngine implements Observer {
 	}
 	
 	public void restart() {
-
-
-			ImageMatrixGUI.getInstance().clearImages();
-			elementUpdate = new ArrayList<>();
-			elementList = new ArrayList<>(); 
+<<<<<<< HEAD
+		ImageMatrixGUI.getInstance().clearImages();
+		elementUpdate = new ArrayList<>();
+		elementList = new ArrayList<>(); 
 			
-			readLevelFromFile(); 
-			sendImagesToGUI();
+		readLevelFromFile(); 
+		sendImagesToGUI();
 			
-			gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+" | Battery: "+ bobcat.getBateryLevel()+"% | Score: " + stats.getScore());
 
-			gui.update();
+		gui.update();
 		
 	}
 	
@@ -171,26 +175,55 @@ public class GameEngine implements Observer {
 	}
 	
 	void startGame() {
+=======
+
+
+			ImageMatrixGUI.getInstance().clearImages();
+			elementUpdate = new ArrayList<>();
+			elementList = new ArrayList<>(); 
+			
+			readLevelFromFile(); 
+			sendImagesToGUI();
+			
+			gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+
+			gui.update();
+		
+	}
+	// Inicio
+	public void start() throws FileNotFoundException {		
+>>>>>>> main
 		gui = ImageMatrixGUI.getInstance();    // 1. obter instancia ativa de ImageMatrixGUI	
 		gui.setSize(GRID_HEIGHT, GRID_WIDTH);  // 2. configurar as dimensoes 
 		gui.registerObserver(this);
 		// Criar o cenario de jogo
 		readLevelFromFile();
 		sendImagesToGUI();
+<<<<<<< HEAD
 		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+" | Battery: "+ bobcat.getBateryLevel()+"% | Score: " + stats.getScore());
+=======
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+>>>>>>> main
 		gui.update();	// 3. registar o objeto ativo GameEngine como observador da GUI
 		
 		gui.go();                              // 4. lancar a GUI
 	}
 	
+<<<<<<< HEAD
+	private void checkWon() {
+=======
 	private void checkIfWon() {
+>>>>>>> main
 		for(GameElement element : elementUpdate) {
 			if(element instanceof Alvo) {
 				if(!((Alvo) element).getBoxOnTop()) return;
 			}	
 		}
 		currentLevel ++;
+<<<<<<< HEAD
 		updateScore();
+=======
+>>>>>>> main
 		restart();
 	}
 	
@@ -210,6 +243,7 @@ public class GameEngine implements Observer {
 		}
 	}
 	
+<<<<<<< HEAD
 	public void updateScore() {
 		//System.out.println(currentUser);
 		stats.scorePontuation(bobcat.getBateryLevel(), currentLevel);
@@ -218,8 +252,11 @@ public class GameEngine implements Observer {
 	}
 	
 	public void update(Observed source) {
+=======
+	public void update(Observed source) {
 		
 		
+>>>>>>> main
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
@@ -234,13 +271,21 @@ public class GameEngine implements Observer {
 		for(GameElement element : elementUpdate) {
 			((onUpdateElement) element).elementUpdate();
 		}
+<<<<<<< HEAD
+		checkWon();
+=======
 		checkIfWon();
+>>>>>>> main
 		checkIfLost();
 		
 		if(key == KeyEvent.VK_R)
 			restart();
 		
+<<<<<<< HEAD
 		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+" | Battery: "+ bobcat.getBateryLevel()+"% | Score: " + stats.getScore());
+=======
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+>>>>>>> main
 		
 		gui.update();
 		
@@ -270,7 +315,6 @@ public class GameEngine implements Observer {
 		}
 	}
 
-	// Criacao da planta do armazem - so' chao neste exemplo 
 	private void createWarehouse(String element, int x, int y) {
 		GameElement gameElement= null;
 		switch(element) {

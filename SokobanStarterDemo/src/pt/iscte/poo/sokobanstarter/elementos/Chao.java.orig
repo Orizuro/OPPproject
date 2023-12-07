@@ -4,6 +4,19 @@ import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Point2D;
 
 public class Chao extends GameElement {
+<<<<<<< HEAD
+	
+	public Chao(Point2D Point2D){
+		super(Point2D);
+	}
+	
+	@Override
+	public String getName() {
+		return "Chao";
+	}
+
+	@Override
+=======
 
 	public Chao(Point2D Point2D) {
 		super(Point2D);
@@ -15,8 +28,10 @@ public class Chao extends GameElement {
 	}
 
 	@Override
+>>>>>>> main
 	public int getLayer() {
 		return 0;
 	}
+
 
 }
