@@ -1,14 +1,31 @@
+<<<<<<< HEAD
+package pt.iscte.poo.sokobanstarter.elementos;	
+=======
 package pt.iscte.poo.sokobanstarter.elementos;
+>>>>>>> main
 
 import java.util.List;
 
 import pt.iscte.poo.sokobanstarter.GameElement;
+<<<<<<< HEAD
+import pt.iscte.poo.sokobanstarter.GameEngine;
+=======
+>>>>>>> main
 import pt.iscte.poo.sokobanstarter.Movable;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Palete extends GameElement implements Movable {
 
+<<<<<<< HEAD
+	private boolean isInHole =false; //Indicates if Palete is in a Buraco
+	private boolean justTeletreasported = false; //Indicates if it was teletrasported recently
+	
+	public Palete(Point2D Point2D){
+		super(Point2D);
+	}
+	
+=======
 	private boolean isInHole = false; // Indicates if Palete is in a Buraco
 	private boolean justTeletreasported = false; // Indicates if it was teletrasported recently
 
@@ -16,6 +33,7 @@ public class Palete extends GameElement implements Movable {
 		super(Point2D);
 	}
 
+>>>>>>> main
 	@Override
 	public String getName() {
 		return "Palete";
@@ -29,6 +47,16 @@ public class Palete extends GameElement implements Movable {
 	@Override
 	public boolean move(Direction direction) {
 		// If the Palete is in a Buraco or has a element behind, exit the method
+<<<<<<< HEAD
+		if(hasObjectBehind(direction)|| isInHole) return false;
+		
+		Point2D newPosition = Point2D.plus(direction.asVector());
+		//Resets the indicator
+		justTeletreasported = false;
+		Point2D = newPosition;
+		return true;
+		
+=======
 		if (hasObjectBehind(direction) || isInHole)
 			return false;
 
@@ -38,12 +66,21 @@ public class Palete extends GameElement implements Movable {
 		Point2D = newPosition;
 		return true;
 
+>>>>>>> main
 	}
 
 	@Override
 	public boolean isColidable() {
 		// Get elements at this Palete location
 		List<GameElement> actualElement = instance.getGameElement(Point2D);
+<<<<<<< HEAD
+		for(GameElement element: actualElement) {
+			//Checks if it inside of a Buraco, and if so doesn't collide
+			if(element instanceof Buraco) {
+				isInHole=true;
+				return false;
+			};
+=======
 		for (GameElement element : actualElement) {
 			// Checks if it inside of a Buraco, and if so doesn't collide
 			if (element instanceof Buraco) {
@@ -51,6 +88,7 @@ public class Palete extends GameElement implements Movable {
 				return false;
 			}
 			;
+>>>>>>> main
 		}
 		return true;
 	}
@@ -59,6 +97,15 @@ public class Palete extends GameElement implements Movable {
 	public boolean hasObjectBehind(Direction direction) {
 		Point2D newPosition = Point2D.plus(direction.asVector());
 		List<GameElement> actualElement = instance.getGameElement(newPosition);
+<<<<<<< HEAD
+		
+		for(GameElement element: actualElement) {
+			if(element.isColidable()) return true;
+		}
+		return false;
+	}
+	
+=======
 
 		for (GameElement element : actualElement) {
 			if (element.isColidable())
@@ -67,11 +114,16 @@ public class Palete extends GameElement implements Movable {
 		return false;
 	}
 
+>>>>>>> main
 	@Override
 	public void setPosition(Point2D newpoint) {
 		this.Point2D = newpoint;
 	}
+<<<<<<< HEAD
+	
+=======
 
+>>>>>>> main
 	@Override
 	public void setJustTeletrasported(boolean bool) {
 		justTeletreasported = bool;
@@ -80,7 +132,11 @@ public class Palete extends GameElement implements Movable {
 	@Override
 	public boolean justTeletrasported() {
 		return justTeletreasported;
+<<<<<<< HEAD
+		
+=======
 
+>>>>>>> main
 	}
 
 }

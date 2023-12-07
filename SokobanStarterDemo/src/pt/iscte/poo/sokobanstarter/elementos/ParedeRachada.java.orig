@@ -1,0 +1,64 @@
+package pt.iscte.poo.sokobanstarter.elementos;
+
+import pt.iscte.poo.sokobanstarter.GameElement;
+<<<<<<< HEAD
+import pt.iscte.poo.utils.Direction;
+import pt.iscte.poo.utils.Point2D;
+
+public class ParedeRachada extends GameElement{
+	
+	boolean key = false;
+	
+	public ParedeRachada(Point2D Point2D){
+		super(Point2D);
+	}
+	
+=======
+import pt.iscte.poo.utils.Point2D;
+
+public class ParedeRachada extends GameElement {
+
+	boolean key = false;
+
+	public ParedeRachada(Point2D Point2D) {
+		super(Point2D);
+	}
+
+>>>>>>> main
+	@Override
+	public String getName() {
+		return "ParedeRachada";
+	}
+
+	@Override
+	public int getLayer() {
+		return 1;
+	}
+<<<<<<< HEAD
+	
+=======
+
+>>>>>>> main
+	@Override
+	public boolean isColidable() {
+		return !key;
+	}
+<<<<<<< HEAD
+	
+	public void checkKey(Empilhadora bobcat) {
+		if(bobcat.searchToll("Martelo")) {
+=======
+
+	public void checkKey(Empilhadora bobcat) {
+		if (bobcat.hasTool("Martelo")) {
+>>>>>>> main
+			key = true;
+			instance.removeGameElement(this);
+		}
+	}
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> main
+}
