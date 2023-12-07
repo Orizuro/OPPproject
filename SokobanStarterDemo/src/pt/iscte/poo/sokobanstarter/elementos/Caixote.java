@@ -23,7 +23,7 @@ public class Caixote extends GameElement implements Movable {
 
 	@Override
 	public int getLayer() {
-		return 1;
+		return 2;
 	}
 
 	@Override

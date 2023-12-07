@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 public class StatsManager {
 	   private static final String FILE_PATH_BOARD = "leaderBoard.txt";
 	   private static final String FILE_PATH_LAST_LEVEL = "saveUserLevel.txt";
@@ -31,9 +33,6 @@ public class StatsManager {
 	       
 	       leaderBoard.add(new Stats(user, cScore));
 
-	       // Order list
-	       Collections.sort(leaderBoard, Collections.reverseOrder());
-
 	       // update file
 	       saveScoreInTextFile(leaderBoard);
 	   }
@@ -47,14 +46,6 @@ public class StatsManager {
 	            System.err.println("Erro ao guardar dados no ficheiro");
 	            e.printStackTrace();
 	        }
-	    }
-	    
-	    public static void showLeaderBoard() {
-	        List<Stats> leaderBoard = getLeaderBoard();
-
-	        for (Stats score : leaderBoard)
-	            System.out.println(score.getUser() + "-" + score.getScore());
-	        
 	    }
 
 	    public static List<Stats> getLeaderBoard() {
@@ -72,7 +63,6 @@ public class StatsManager {
 	            }
 	        } catch (IOException e) {
 	            System.err.println("Erro ao ler o ficheiro de texto.");
-	            e.printStackTrace();
 	        }
 	        return leaderBoard;
 	    }
@@ -87,6 +77,23 @@ public class StatsManager {
 	    	return 0;
 	    }
 	    
+	    public static void viewLeaderBoard() {
+	    	List<Stats> leaderBoard = getLeaderBoard();
+	    	Collections.sort(leaderBoard);
+	    	int position = 1;
+	    	
+	    	String content = "Leaderboard: \n";
+	    	for(Stats results: leaderBoard) {
+	    		content+= position+"º "+results.getUser()+" : "+results.getScore()+" Points\n";
+	    		position++;
+	    	}
+	    	if(position==1) {
+	    		content+="Still empty, try beat it :)";
+	    	}
+	    	
+	    	JOptionPane.showMessageDialog(null, content, "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
+	    }
+	    
 	    //LEVELS
 	    
 	    public static void saveLevel(String user, int level) {
@@ -97,16 +104,12 @@ public class StatsManager {
 	            if (score.getUser().equals(user)) {
 	            	if(level > score.getLevel())
 	            		score.setLevel(level);
-	            	Collections.sort(saveLevel, Collections.reverseOrder());
 	                saveLevelInTextFile(saveLevel); // update file
 	                return;
 	            }
 	        }
 	        
 	        saveLevel.add(new Stats(level, user));
-
-	        // Order list
-	        Collections.sort(saveLevel, Collections.reverseOrder());
 
 	        // update file
 	        saveLevelInTextFile(saveLevel);
@@ -132,7 +135,6 @@ public class StatsManager {
 	                if (parts.length == 2) {
 	                    String user = parts[0];
 	                    int level = Integer.parseInt(parts[1]);
-	                    System.out.println(user +" "+level);
 	                    leaderBoard.add(new Stats(level, user));
 	                }
 	            }
@@ -150,5 +152,16 @@ public class StatsManager {
 	    			return result.getLevel();
 	    	}
 	    	return 0;
+	    }
+	    
+	    public static void resetAll() {
+	    	try {
+	    		PrintWriter writer = new PrintWriter(new File(FILE_PATH_LAST_LEVEL));
+	    		writer.print("");
+	    		writer=new PrintWriter(new File(FILE_PATH_BOARD));
+	    		writer.print("");
+	    	}catch(IOException e) {
+	    		System.err.println("Erro ao pagar dados do ficheiro de texto");
+	    	}
 	    }
 }

@@ -1,5 +1,4 @@
 package pt.iscte.poo.sokobanstarter;
-import pt.iscte.poo.sokobanstarter.elementos.*;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -76,19 +75,16 @@ public class GameEngine implements Observer {
 	}
 	
 	public void restart() {
-
-
-			ImageMatrixGUI.getInstance().clearImages();
-			elementUpdate = new ArrayList<>();
-			elementList = new ArrayList<>(); 
+		ImageMatrixGUI.getInstance().clearImages();
+		elementUpdate = new ArrayList<>();
+		elementList = new ArrayList<>(); 
 			
-			readLevelFromFile(); 
-			sendImagesToGUI();
+		readLevelFromFile(); 
+		sendImagesToGUI();
 			
-			gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
+		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+"  Battery: "+ bobcat.getBateryLevel()+"%");
 
-			gui.update();
-		
+		gui.update();
 	}
 	
 	// Inicio
@@ -101,13 +97,15 @@ public class GameEngine implements Observer {
         dialog.setTitle("Welcome to Java Sokoban!");
 
         JPanel titlePanel = new JPanel();
-        JLabel titleLabel = new JLabel("Welcome");
+        JLabel titleLabel = new JLabel("Main Menu");
         titlePanel.add(titleLabel);
 
         dialog.add(titlePanel, BorderLayout.NORTH);
 
         JButton button1 = new JButton("Start!");
-        JButton button2 = new JButton("Exit Game");
+        JButton button2 = new JButton("Leaderboard");
+        JButton button3 = new JButton("Reset Data");
+        JButton button4 = new JButton("Exit Game");
 
         button1.addActionListener(new ActionListener() {
             @Override
@@ -126,14 +124,31 @@ public class GameEngine implements Observer {
         				JOptionPane.showMessageDialog(null, "You have to enter a valid username!", "Wrong input", JOptionPane.ERROR_MESSAGE);
         			else {
         				createUser(userName);
+        				if(currentLevel == 0)rules();
         				startGame();
         				return;
         			}
         		}
             }
         });
-
+        
         button2.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StatsManager.viewLeaderBoard();
+			}
+        });
+        
+        button3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all data?", "Delete Progress",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    	    	if(selection == JOptionPane.YES_OPTION)
+    	    		StatsManager.resetAll();
+			}
+        });
+
+        button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Exit",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -143,6 +158,7 @@ public class GameEngine implements Observer {
         });
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
+        
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -151,10 +167,16 @@ public class GameEngine implements Observer {
 
         gbc.gridy = 1;
         buttonPanel.add(button2, gbc);
+        
+        gbc.gridy = 2;
+        buttonPanel.add(button3, gbc);
+        
+        gbc.gridy = 3;
+        buttonPanel.add(button4, gbc);
 
         dialog.add(buttonPanel, BorderLayout.CENTER);
-
-        dialog.setSize(300, 200);
+        
+        dialog.setSize(300, 280);
         dialog.setLocationRelativeTo(null); // Centraliza o diálogo
         dialog.setVisible(true);
         dialog.setDefaultCloseOperation(0);
@@ -189,6 +211,13 @@ public class GameEngine implements Observer {
 				if(!((Alvo) element).getBoxOnTop()) return;
 			}	
 		}
+		
+		if(currentLevel == 6) {
+			JOptionPane.showMessageDialog(null, "Congratulations! You complete the game!", "Level Complete", JOptionPane.INFORMATION_MESSAGE);
+			System.exit(0);
+		}
+		
+		JOptionPane.showMessageDialog(null, "Congratulations! You passed the level!", "Level Complete", JOptionPane.INFORMATION_MESSAGE);
 		currentLevel ++;
 		updateScore();
 		restart();
@@ -206,6 +235,11 @@ public class GameEngine implements Observer {
 			}	
 		}
 		if(boxes < alvo) {
+			JOptionPane.showMessageDialog(null, "You droped a box!", "Out of Boxes", JOptionPane.ERROR_MESSAGE);
+			restart();
+		}
+		if(bobcat.getBateryLevel()==0) {
+			JOptionPane.showMessageDialog(null, "You ran ou of battery!", "Out of Battery", JOptionPane.ERROR_MESSAGE);
 			restart();
 		}
 	}
@@ -218,8 +252,6 @@ public class GameEngine implements Observer {
 	}
 	
 	public void update(Observed source) {
-		
-		
 		int key = gui.keyPressed();   
 
 		if (key == KeyEvent.VK_UP) 
@@ -237,13 +269,14 @@ public class GameEngine implements Observer {
 		checkIfWon();
 		checkIfLost();
 		
-		if(key == KeyEvent.VK_R)
-			restart();
+		if(key == KeyEvent.VK_R) {
+				if(stats.getScore()>0)stats.setScore(stats.getScore()-30);
+	    		restart();
+		}
 		
 		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+" | Battery: "+ bobcat.getBateryLevel()+"% | Score: " + stats.getScore());
 		
 		gui.update();
-		
 	}
 
 	private void readLevelFromFile() {
@@ -286,7 +319,6 @@ public class GameEngine implements Observer {
 			default:
 				gameElement = new Chao(new Point2D(x, y));
 				break;
-				
 		}
 		elementList.add(gameElement);
 		if(gameElement instanceof onUpdateElement)
@@ -304,7 +336,6 @@ public class GameEngine implements Observer {
 			case "C":
 				gameElement = ( new Caixote(new Point2D(x, y)));
 				break;
-			
 			case "B":
 				gameElement = (new Bateria(new Point2D(x, y)));
 				break;
@@ -337,10 +368,8 @@ public class GameEngine implements Observer {
 	
 	
 	public void removeGameElement(GameElement element) {
-
 		gui.removeImage(element);
 		elementList.remove(element);
-
 	}
 	
 	public List<GameElement> getGameElement(Point2D point)  {
@@ -363,11 +392,25 @@ public class GameEngine implements Observer {
 	}
 
 	private void sendImagesToGUI() {
-		
 		tileList = new ArrayList<>(); 
 		for ( int i = 0; i < elementList.size(); i++ ) {
 			tileList.add( elementList.get( i ) );
 		}
 		gui.addImages(tileList);
+	}
+	
+	private void rules() {
+		String content="Guide:\n\n"
+				+ "You need to get all the boxes on the target 'x'\n"
+				+ "Your Forklift has battery, use it efficiently\n"
+				+ "Watch out for the holes in the ground. If you drop one box into the hole you lose\n"
+				+ "Some levels have addons to pick up:\n"
+				+ "-Battery: Recharge the machine\n"
+				+ "-Hammer: Can break cracked walls\n"
+				+ "-Pallet: can fill holes\n"
+				+ "-Teleport: takes you or your boxes to the location of the other teleporter\n"
+				+ "You can restart the current level that yo are playing by pressing the letter 'R' (but you might loose points)\n\n"
+				+ "And most importantly... Have FUN!!";
+		JOptionPane.showMessageDialog(null, content, "The Basics", JOptionPane.INFORMATION_MESSAGE);
 	}
 }

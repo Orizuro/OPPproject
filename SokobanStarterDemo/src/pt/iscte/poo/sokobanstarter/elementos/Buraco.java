@@ -2,6 +2,8 @@ package pt.iscte.poo.sokobanstarter.elementos;
 
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import pt.iscte.poo.sokobanstarter.Consumable;
 import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.sokobanstarter.Movable;
@@ -32,14 +34,13 @@ public class Buraco extends GameElement implements onUpdateElement, Consumable {
 		List<GameElement> elementList = instance.getGameElement(this.Point2D);
 
 		for (GameElement element : elementList) {
-			// Check if the boraco is covered by a palette
+			// Check if the buraco is covered by a palette
 			if (element instanceof Palete) {
 				isCoverd = true;
 				// Remove movable elements if the buraco is not covered by a palette
 			} else if (element instanceof Movable && !isCoverd) {
 				instance.removeGameElement(element);
 			}
-
 		}
 	}
 
@@ -48,6 +49,7 @@ public class Buraco extends GameElement implements onUpdateElement, Consumable {
 		// If the buraco is not covered by a palette and Empilhadora consumes it,
 		// trigger a lose condition
 		if (!isCoverd) {
+			JOptionPane.showMessageDialog(null, "Your forklift entered into a hole!", "Forklift Dead :[", JOptionPane.ERROR_MESSAGE);
 			instance.lose();
 		}
 	}

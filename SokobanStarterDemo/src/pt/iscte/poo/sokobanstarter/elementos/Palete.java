@@ -50,7 +50,6 @@ public class Palete extends GameElement implements Movable {
 				isInHole = true;
 				return false;
 			}
-			;
 		}
 		return true;
 	}

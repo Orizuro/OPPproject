@@ -2,6 +2,7 @@ package pt.iscte.poo.sokobanstarter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -100,8 +101,8 @@ public class LevelLoader {
 				break;
 			case "T":
 				GameElement temp = new Teleporte(new Point2D(x, y));
-			List<GameElement> teleportList = null;
-			teleportList.add( temp);
+				List<GameElement> teleportList = new ArrayList<GameElement>();
+				teleportList.add( temp);
 				elementList.add(temp);
 				break;
 		}

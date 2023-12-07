@@ -2,14 +2,11 @@ package pt.iscte.poo.sokobanstarter.elementos;
 
 import pt.iscte.poo.sokobanstarter.Consumable;
 import pt.iscte.poo.sokobanstarter.GameElement;
-import pt.iscte.poo.sokobanstarter.GameEngine;
 import pt.iscte.poo.sokobanstarter.Movable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import pt.iscte.poo.sokobanstarter.GameElement;
 import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
