@@ -40,7 +40,7 @@ public class GameEngine implements Observer {
 	private List<GameElement> elementList;// Lista de imagens
 	private List<GameElement> elementUpdate;  
 	private Empilhadora bobcat;	        // Referencia para a empilhadora
-	private int currentLevel = 0;
+	private int currentLevel = 6;
 	
 	private GameEngine() {
 		elementList = new ArrayList<>();  
@@ -86,7 +86,7 @@ public class GameEngine implements Observer {
 		gui.go();                              // 4. lancar a GUI
 	}
 	
-	private void ceckWon() {
+	private void checkIfWon() {
 		for(GameElement element : elementUpdate) {
 			if(element instanceof Alvo) {
 				if(!((Alvo) element).getBoxOnTop()) return;
@@ -129,7 +129,7 @@ public class GameEngine implements Observer {
 		for(GameElement element : elementUpdate) {
 			((onUpdateElement) element).elementUpdate();
 		}
-		ceckWon();
+		checkIfWon();
 		checkIfLost();
 		
 		if(key == KeyEvent.VK_R)
