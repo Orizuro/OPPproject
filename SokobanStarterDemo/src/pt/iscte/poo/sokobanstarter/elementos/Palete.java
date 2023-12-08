@@ -47,6 +47,8 @@ public class Palete extends GameElement implements Movable {
 		for (GameElement element : actualElement) {
 			// Checks if it inside of a Buraco, and if so doesn't collide
 			if (element instanceof Buraco) {
+				// Checks if in the hole exists a Palete
+				if (element instanceof Palete) return true;
 				isInHole = true;
 				return false;
 			}
