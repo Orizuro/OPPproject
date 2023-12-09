@@ -263,8 +263,7 @@ public class GameEngine implements Observer {
 		for(GameElement element : elementUpdate) {
 			((onUpdateElement) element).elementUpdate();
 		}
-		checkIfWon();
-		checkIfLost();
+		
 		
 		if(key == KeyEvent.VK_R) {
 				if(stats.getScore()>0)stats.setScore(stats.getScore()-30);
@@ -274,6 +273,8 @@ public class GameEngine implements Observer {
 		gui.setStatusMessage("Sokoban Starter | Level: "+(currentLevel+1)+" | Battery: "+ bobcat.getBateryLevel()+"% | Score: " + stats.getScore());
 		
 		gui.update();
+		checkIfWon();
+		checkIfLost();
 	}
 
 	private void readLevelFromFile() {
