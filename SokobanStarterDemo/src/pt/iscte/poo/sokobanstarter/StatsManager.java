@@ -1,12 +1,16 @@
 package pt.iscte.poo.sokobanstarter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 
 public class StatsManager {
 	   private static final String FILE_PATH_BOARD = "leaderBoard.txt";
@@ -51,10 +55,20 @@ public class StatsManager {
 	    
 	    public static void showLeaderBoard() {
 	        List<Stats> leaderBoard = getLeaderBoard();
-
-	        for (Stats score : leaderBoard)
-	            System.out.println(score.getUser() + "-" + score.getScore());
 	        
+	        Collections.sort(leaderBoard, Comparator.reverseOrder()); //Descending order
+	        
+	        String content = "Leaderboard \n";
+	        
+	        int position = 1;
+
+	        for (Stats score : leaderBoard) {
+	            content += position+": "+score.getUser()+" - "+score.getScore()+" Points\n";
+	            position++;
+	        }
+	        if(position == 1)content+="No records found";
+	        
+	        JOptionPane.showMessageDialog(null, content, "Leaderboard", JOptionPane.INFORMATION_MESSAGE);
 	    }
 
 	    public static List<Stats> getLeaderBoard() {
@@ -132,7 +146,6 @@ public class StatsManager {
 	                if (parts.length == 2) {
 	                    String user = parts[0];
 	                    int level = Integer.parseInt(parts[1]);
-	                    System.out.println(user +" "+level);
 	                    leaderBoard.add(new Stats(level, user));
 	                }
 	            }
@@ -150,5 +163,33 @@ public class StatsManager {
 	    			return result.getLevel();
 	    	}
 	    	return 0;
+	    }
+	    
+	    public static void resetAll() {
+	    	int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all data?", "Delete Data",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+	    	if(selection == JOptionPane.NO_OPTION)
+	    		return;
+	    	try {
+				PrintWriter writer = new PrintWriter(new File(FILE_PATH_LAST_LEVEL));
+				writer.println("");
+				writer = new PrintWriter(new File(FILE_PATH_BOARD));
+				writer.println("");
+				writer.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+	    }
+	    
+	    public static void checkFiles() {
+	    	File f = new File(FILE_PATH_BOARD);
+	    	try {
+				if(f.createNewFile()) {
+					f = new File(FILE_PATH_LAST_LEVEL);
+					if(f.createNewFile())
+						return;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	    }
 }

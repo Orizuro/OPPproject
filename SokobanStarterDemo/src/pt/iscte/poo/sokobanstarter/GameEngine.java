@@ -88,6 +88,7 @@ public class GameEngine implements Observer {
 	
 	// Inicio
 	public void start() {
+		StatsManager.checkFiles();
 		startNewGameDialog();
 	}
 	
@@ -102,7 +103,9 @@ public class GameEngine implements Observer {
         dialog.add(titlePanel, BorderLayout.NORTH);
 
         JButton button1 = new JButton("Start!");
-        JButton button2 = new JButton("Exit Game");
+        JButton button2 = new JButton("Leaderboard");
+        JButton button3 = new JButton("Reset Data");
+        JButton button4 = new JButton("Exit Game");
 
         button1.addActionListener(new ActionListener() {
             @Override
@@ -127,8 +130,21 @@ public class GameEngine implements Observer {
         		}
             }
         });
-
+        
         button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StatsManager.showLeaderBoard();
+			}
+        });
+        
+        button3.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				StatsManager.resetAll();
+			}
+        });
+
+        button4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
             	int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Exit",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -146,10 +162,16 @@ public class GameEngine implements Observer {
 
         gbc.gridy = 1;
         buttonPanel.add(button2, gbc);
+        
+        gbc.gridy = 2;
+        buttonPanel.add(button3, gbc);
+        
+        gbc.gridy = 3;
+        buttonPanel.add(button4, gbc);
 
         dialog.add(buttonPanel, BorderLayout.CENTER);
 
-        dialog.setSize(300, 200);
+        dialog.setSize(300, 300);
         dialog.setLocationRelativeTo(null); // Centraliza o diálogo
         dialog.setVisible(true);
         dialog.setDefaultCloseOperation(0);
