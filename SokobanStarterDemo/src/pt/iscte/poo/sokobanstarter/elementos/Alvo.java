@@ -1,12 +1,7 @@
 package pt.iscte.poo.sokobanstarter.elementos;
 
-import java.util.List;
-
 import pt.iscte.poo.sokobanstarter.GameElement;
-import pt.iscte.poo.sokobanstarter.GameEngine;
-import pt.iscte.poo.sokobanstarter.Movable;
 import pt.iscte.poo.sokobanstarter.onUpdateElement;
-import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public class Alvo extends GameElement  implements onUpdateElement{

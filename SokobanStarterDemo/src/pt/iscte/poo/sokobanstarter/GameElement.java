@@ -1,10 +1,6 @@
 package pt.iscte.poo.sokobanstarter;
 
-import java.util.List;
-
 import pt.iscte.poo.gui.ImageTile;
-import pt.iscte.poo.sokobanstarter.elementos.Empilhadora;
-import pt.iscte.poo.utils.Direction;
 import pt.iscte.poo.utils.Point2D;
 
 public abstract class GameElement implements ImageTile{
