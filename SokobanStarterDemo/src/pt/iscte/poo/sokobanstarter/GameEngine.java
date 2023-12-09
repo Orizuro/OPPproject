@@ -172,7 +172,7 @@ public class GameEngine implements Observer {
         dialog.add(buttonPanel, BorderLayout.CENTER);
 
         dialog.setSize(300, 300);
-        dialog.setLocationRelativeTo(null); // Centraliza o diálogo
+        dialog.setLocationRelativeTo(null); // Centers dialog
         dialog.setVisible(true);
         dialog.setDefaultCloseOperation(0);
 	}
