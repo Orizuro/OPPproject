@@ -15,6 +15,10 @@ public class Palete extends GameElement implements Movable {
 	public Palete(Point2D Point2D) {
 		super(Point2D);
 	}
+	
+	public boolean getIsInHole(){
+		return isInHole;
+	}
 
 	@Override
 	public String getName() {
@@ -42,18 +46,22 @@ public class Palete extends GameElement implements Movable {
 
 	@Override
 	public boolean isColidable() {
+		if(isInHole) return false;
+		boolean temp = false;
 		// Get elements at this Palete location
 		List<GameElement> actualElement = instance.getGameElement(Point2D);
 		for (GameElement element : actualElement) {
+			// Checks if in the Palete is already in a hole
+			if(element instanceof Palete) {
+				if(((Palete) element).getIsInHole()) return true;
+			}
 			// Checks if it inside of a Buraco, and if so doesn't collide
 			if (element instanceof Buraco) {
-				// Checks if in the hole exists a Palete
-				if (element instanceof Palete) return true;
-				isInHole = true;
-				return false;
+				temp = true;
 			}
 		}
-		return true;
+		isInHole = temp;
+		return !isInHole;
 	}
 
 	@Override
