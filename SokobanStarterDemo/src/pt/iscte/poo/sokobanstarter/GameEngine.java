@@ -124,6 +124,7 @@ public class GameEngine implements Observer {
         				JOptionPane.showMessageDialog(null, "You have to enter a valid username!", "Wrong input", JOptionPane.ERROR_MESSAGE);
         			else {
         				createUser(userName);
+        				if(currentLevel == 0)rules();
         				startGame();
         				return;
         			}
@@ -383,5 +384,20 @@ public class GameEngine implements Observer {
 			tileList.add( elementList.get( i ) );
 		}
 		gui.addImages(tileList);
+	}
+	
+	private void rules() {
+		String content="Guide:\n\n"
+				+ "You need to get all the boxes on the target 'x'\n"
+				+ "Your Forklift has battery, use it efficiently\n"
+				+ "Watch out for the holes in the ground. If you drop one box into the hole you lose\n"
+				+ "Some levels have addons to pick up:\n"
+				+ "-Battery: Recharge the Forklift\n"
+				+ "-Hammer: Can break cracked walls\n"
+				+ "-Pallet: can fill holes\n"
+				+ "-Teleport: takes you or your boxes to the location of the other teleporter\n"
+				+ "You can restart the current level that yo are playing by pressing the letter 'R' (but you might loose points)\n\n"
+				+ "And most importantly... Have FUN!!";
+		JOptionPane.showMessageDialog(null, content, "The Basics", JOptionPane.INFORMATION_MESSAGE);
 	}
 }
