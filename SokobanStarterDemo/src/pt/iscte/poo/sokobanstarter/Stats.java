@@ -43,6 +43,6 @@ public class Stats implements Comparable<Stats>{
 	
     @Override
     public int compareTo(Stats score2) {
-        return Integer.compare(score2.score, this.score);
+        return Integer.compare(this.score, score2.getScore());
     }
 }

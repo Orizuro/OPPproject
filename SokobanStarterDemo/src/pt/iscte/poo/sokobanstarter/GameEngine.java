@@ -89,6 +89,7 @@ public class GameEngine implements Observer {
 	
 	// Inicio
 	public void start() {
+		StatsManager.checkFiles();
 		startNewGameDialog();
 	}
 	
@@ -133,18 +134,15 @@ public class GameEngine implements Observer {
         });
         
         button2.addActionListener(new ActionListener() {
-			@Override
 			public void actionPerformed(ActionEvent e) {
-				StatsManager.viewLeaderBoard();
+				StatsManager.showLeaderBoard();
 			}
         });
         
         button3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int selection = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete all data?", "Delete Progress",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-    	    	if(selection == JOptionPane.YES_OPTION)
-    	    		StatsManager.resetAll();
+				StatsManager.resetAll();
 			}
         });
 
@@ -175,9 +173,8 @@ public class GameEngine implements Observer {
         buttonPanel.add(button4, gbc);
 
         dialog.add(buttonPanel, BorderLayout.CENTER);
-        
-        dialog.setSize(300, 280);
-        dialog.setLocationRelativeTo(null); // Centraliza o diálogo
+        dialog.setSize(300, 300);
+        dialog.setLocationRelativeTo(null); // Centers dialog
         dialog.setVisible(true);
         dialog.setDefaultCloseOperation(0);
 	}
@@ -405,7 +402,7 @@ public class GameEngine implements Observer {
 				+ "Your Forklift has battery, use it efficiently\n"
 				+ "Watch out for the holes in the ground. If you drop one box into the hole you lose\n"
 				+ "Some levels have addons to pick up:\n"
-				+ "-Battery: Recharge the machine\n"
+				+ "-Battery: Recharge the Forklift\n"
 				+ "-Hammer: Can break cracked walls\n"
 				+ "-Pallet: can fill holes\n"
 				+ "-Teleport: takes you or your boxes to the location of the other teleporter\n"

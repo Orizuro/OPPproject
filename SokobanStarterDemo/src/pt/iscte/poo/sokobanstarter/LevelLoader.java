@@ -101,8 +101,9 @@ public class LevelLoader {
 				break;
 			case "T":
 				GameElement temp = new Teleporte(new Point2D(x, y));
-				List<GameElement> teleportList = new ArrayList<GameElement>();
-				teleportList.add( temp);
+
+			List<GameElement> teleportList = new ArrayList<>();
+			teleportList.add(temp);
 				elementList.add(temp);
 				break;
 		}
